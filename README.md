@@ -75,7 +75,7 @@ Schema tables Entity Relationship Diagram (ERD)
 
 **Prerequisites**
 - Docker and Docker Compose installed
-- Google Cloud account with GCS and BigQuery access with minimal the followinh roles:
+- Google Cloud account with GCS and BigQuery access with minimal the following roles:
     - BigQuery Admin
     - BigQuery Data Viewer
     - Storage Admin
