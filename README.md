@@ -157,7 +157,7 @@ apt install -y vim
 su - postgres
 cd data
 vi postgresql.conf
-==> Search wal_level word an then change parameter wal_level = replica to wal_level = logical
+==> Search wal_level word and then change parameter wal_level = replica to wal_level = logical
 save and exit
 ```
 Restart project_postgres container
@@ -175,7 +175,9 @@ docker exec -it project_postgres psql -U postgres -d hospital -f /opt/create_tab
 **9. Setup Debezium**
 ```
 docker exec -it project_debezium bash
+```
 
+```
 curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d '{
   "name": "postgres-source",
   "config": {
@@ -220,6 +222,11 @@ postgres-source.public.patients          1           1
 postgres-source.public.prescriptions     1           1
 postgres-source.public.visits            1           1
 ```
+```
+rpk topic consume postgres-source.public.visits
+```
+Ctrl+C
+
 
 **12. Copy Kestra Flow Files**
 ```
@@ -239,15 +246,33 @@ Kestra Namespace: **project**
 **13. Start streaming pipeline via Kestra GUI:**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
-- **dim_doctors** _(send json topic files to gs://{GCS_BUCKET}/debezium/doctors)_
-- **dim_patients** _(send json topic files to gs://{GCS_BUCKET}/debezium/patients)_
-- **dim_medicines** _(send json topic files to gs://{GCS_BUCKET}/debezium/medicines)_
-- **dim_gcs_to_bigquery** _(upload dimension tables from GCS to BigQuery)_
-- **streaming_producer** _(start streaming data to Redpanda topic)_
-- **flink_topic_to_postgres** _(upload topic data to PostgreSQL. Debezium will automatically send data changes to Redpanda topic)_
-- **redpanda_debezium_to_gcs** _(send json topic files to GCS)_
-- **fact_gcs_to_bigquery** _(upload fact tables from GCS to BigQuery)_
-- **dbt_run** _(run dbt for creating data mart for analytics purpose)_
+
+- **dim_doctors**
+  _(send json topic files to gs://{GCS_BUCKET}/debezium/doctors)_
+
+- **dim_patients**
+  _(send json topic files to gs://{GCS_BUCKET}/debezium/patients)_
+
+- **dim_medicines**
+  _(send json topic files to gs://{GCS_BUCKET}/debezium/medicines)_
+
+- **dim_gcs_to_bigquery**
+  _(upload dimension tables from GCS to BigQuery)_
+
+- **streaming_producer**
+  _(start streaming data to Redpanda topic)_
+
+- **flink_topic_to_postgres**
+  _(upload topic data to PostgreSQL. Debezium will automatically send data changes to Redpanda topic)_
+
+- **redpanda_debezium_to_gcs**
+  _(send json topic files to GCS)_
+
+- **fact_gcs_to_bigquery**
+  _(upload fact tables from GCS to BigQuery)_
+
+- **dbt_run**
+  _(run dbt for creating data mart for analytics purpose)_
 
 Monitor topic using rpk commamd
 - rpk --help
