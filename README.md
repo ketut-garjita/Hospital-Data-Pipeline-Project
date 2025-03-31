@@ -93,17 +93,46 @@ cd hospital-data-pipeline
 - Bucket name: hospital_datalake
 - Dataset: hospital
 
-**3. Setup network connection for kestra and pgadmin**
+**3. Build and start containers:**
+
+```
+docker compose up -d --build
+```
+
+**4. Setup network connection for kestra and pgadmin**
 
 Kestra container: kestra
+
 Pgadmin container: pgadmin
 
+Customize with your kestra and pgadmin container name.
+
 ```
-docker network connect hospital_project_net kestra
-docker network connect hospital_project_net pgadmin
+docker kestra-metadata
+docker kestra
+start docker pgadmin 
+docker network connect hospital-data-pipeline-project_project_net kestra
+docker network connect hospital-data-pipeline-project_project_net pgadmin
+docker restart kestra-metadata
+docker restart kestra
+docker restart pgadmin 
 ```
 
-**4. Initialize infrastructure:**
+**5. Edit /etc/hosts on local server**
+Check IP Address of the project_redpanda and project_postgres
+```
+docker network list
+docker network inspect hospital-data-pipeline-project_project_net
+```
+Check IPv4Address value of the project_redpanda and project_postgres containers.
+
+Edit /etc/hosts on local server
+```
+<IPv4Address> project_redpanda
+<IPv4Address> project_postgres
+```
+
+**6. Initialize infrastructure:**
 
 Note: make sure terraform has been installed
 
@@ -114,28 +143,29 @@ terraform plan
 terraform apply
 ```
 
-**5. Build and start containers:**
-
+**7. Change wal_level = logical on postgresql.conf**
 ```
-docker compose up -d --build
+docker exec -it project_postgres bash
+```
+```
+apt update
+apt install -y vim
+su - postgres
+cd data
+vi postgresql.conf
+==> Change parameter wal_level = replica to wal_level = logical
+exit
+```
+Restart project_postgres container
+```
+docker restart project_postgres
 ```
 
-**6. Initialize database:**
+**8. Initialize database:**
 
 ```
 docker cp ./src/create_tables.sql project_postgres:/opt
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/create_tables.sql
-```
-
-**7. Generate sample data:**
-
-```
-python ./src/generate_data_postgres.py
-```
-
-**8. Install dbt-biquery on dbt**
-```
-docker exec -it project_dbt_runner bash -c "pip install dbt-bigquery"
 ```
 
 **9. Setup Debezium**
@@ -154,7 +184,7 @@ curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json
     "database.server.name": "postgres_source",
     "slot.name": "debezium_slot",
     "plugin.name": "pgoutput",
-    "table.include.list": "public.visits,public.billing_payments,public.prescriptions", 
+    "table.include.list": "public.*", 
     "topic.prefix": "postgres-source",
     "database.history.kafka.bootstrap.servers": "project_redpanda:29092",
     "database.history.kafka.topic": "schema-changes"
@@ -162,12 +192,32 @@ curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json
 }'
 ```
 
-**10. Check Redpanda Topic**
+**10. Generate sample data:**
+
+```
+pip install faker
+python ./src/generate_data_postgres.py
+```
+
+**11. Check Redpanda Topic**
 ```
 rpk topic list
 ```
+```
+redpanda@4350801d7c77:/$ rpk topic list
+NAME                                     PARTITIONS  REPLICAS
+connect_configs                          1           1
+connect_offsets                          25          1
+connect_statuses                         5           1
+postgres-source.public.billing_payments  1           1
+postgres-source.public.doctors           1           1
+postgres-source.public.medicines         1           1
+postgres-source.public.patients          1           1
+postgres-source.public.prescriptions     1           1
+postgres-source.public.visits            1           1
+```
 
-**11. Copy Kestra Flow Files**
+**12. Copy Kestra Flow Files**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dbt_run.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_doctors.yaml
@@ -182,18 +232,18 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/
 Kestra Namespace: **project**
 
 
-**12. Start streaming pipeline via Kestra GUI:**
+**13. Start streaming pipeline via Kestra GUI:**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
-- dim_doctors (send json topic files to gs://{GCS_BUCKET}/debezium/doctors}
-- dim_patients (send json topic files to gs://{GCS_BUCKET}/debezium/patients}
-- dim_medicines (send json topic files to gs://{GCS_BUCKET}/debezium/medicines}
-- dim_gcs_to_bigquery (upload dimension tables from GCS to BigQuery)
-- streaming_producer (start streaming data to Redpanda topic)
-- flink_topic_to_postgres (upload topic data to PostgreSQL. Debezium will automatically send data changes to Redpanda topic)
-- redpanda_debezium_to_gcs (send json topic files to GCS)
-- fact_gcs_to_bigquery (upload fact tables from GCS to BigQuery)
-- dbt_run (run dbt for creating data mart for analytics purpose)
+- **dim_doctors** _(send json topic files to gs://{GCS_BUCKET}/debezium/doctors)_
+- **dim_patients** _(send json topic files to gs://{GCS_BUCKET}/debezium/patients)_
+- **dim_medicines** _(send json topic files to gs://{GCS_BUCKET}/debezium/medicines)_
+- **dim_gcs_to_bigquery** _(upload dimension tables from GCS to BigQuery)_
+- **streaming_producer** _(start streaming data to Redpanda topic)_
+- **flink_topic_to_postgres** _(upload topic data to PostgreSQL. Debezium will automatically send data changes to Redpanda topic)_
+- **redpanda_debezium_to_gcs** _(send json topic files to GCS)_
+- **fact_gcs_to_bigquery** _(upload fact tables from GCS to BigQuery)_
+- **dbt_run** _(run dbt for creating data mart for analytics purpose)_
 
 Monitor topic using rpk commamd
 - rpk --help

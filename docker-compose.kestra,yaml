@@ -29,7 +29,6 @@ services:
       - /var/.config:/var/.config 
       - ~/kestra-scripts:/app/scripts
       - ~/projects/zoomcamp/de-2025/project/project1/ecommerce:/app/ecommerce
-      - /var/run/docker.sock:/var/run/docker.sock
 
     environment:
       KESTRA_PLUGINS: |
