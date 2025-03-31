@@ -25,7 +25,7 @@ Schema tables Entity Relationship Diagram (ERD)
 ## Data Pipeline Architecture
 **Hospital Data Pipeline**
 
-![image](https://github.com/user-attachments/assets/30e17c38-4ccc-4ce6-9885-0096c3d66cd3)
+![image](https://github.com/user-attachments/assets/19b2fff4-5be6-4668-8bb7-a261461da097)
 
 
 **1. Data Generation & Collection:**
