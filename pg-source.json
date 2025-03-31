@@ -9,7 +9,7 @@
     "database.dbname": "hospital",
     "database.server.name": "postgres",
     "topic.prefix": "postgres", 
-    "table.include.list": "public.visits,public.billing_payments,public.prescriptions",
+    "table.include.list": "public.*",
     "plugin.name": "pgoutput",
     "slot.name": "debezium_slot",
     "publication.name": "debezium_pub",
