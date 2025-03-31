@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: hospital
+    schema: hospital  
+    tables:
+      - name: visits
+      - name: doctors
+      - name: patients
+      - name: medicines
+      - name: billing_payments
+      - name: prescriptions
