@@ -29,9 +29,10 @@ Schema tables Entity Relationship Diagram (ERD)
 
 
 **1. Data Generation & Collection:**
-- PostgreSQL as the operational database
-- Python scripts generating synthetic hospital data
-- Redpanda (Kafka-compatible) for streaming data ingestion
+- Producing data into a Redpanda topic
+- A Python script generates synthetic hospital data
+- PostgreSQL serves as the operational database
+- Redpanda (Kafka-compatible) is used for streaming data
 
 **2. Stream Processing:**
 - Apache Flink for real-time data processing
