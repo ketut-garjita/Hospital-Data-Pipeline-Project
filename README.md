@@ -103,6 +103,8 @@ docker compose up -d --build
 
 **4. Setup network connection for kestra and pgadmin**
 
+Kestra metadata container: kestra-metadata
+
 Kestra container: kestra
 
 Pgadmin container: pgadmin
@@ -110,9 +112,9 @@ Pgadmin container: pgadmin
 Customize with your kestra and pgadmin container name.
 
 ```
-docker kestra-metadata
-docker kestra
-start docker pgadmin 
+docker start kestra-metadata
+docker staet kestra
+docker start pgadmin 
 docker network connect hospital-data-pipeline-project_project_net kestra
 docker network connect hospital-data-pipeline-project_project_net pgadmin
 docker restart kestra-metadata
@@ -128,7 +130,7 @@ docker network inspect hospital-data-pipeline-project_project_net
 ```
 Check IPv4Address value of the project_redpanda and project_postgres containers.
 
-Edit /etc/hosts on local server
+Edit the /etc/hosts and add two lines on local server
 ```
 <IPv4Address> project_redpanda
 <IPv4Address> project_postgres
@@ -145,7 +147,7 @@ terraform plan
 terraform apply
 ```
 
-**7. Change wal_level = logical on postgresql.conf**
+**7. Change wal_level = logical in postgresql.conf file**
 ```
 docker exec -it project_postgres bash
 ```
@@ -155,8 +157,8 @@ apt install -y vim
 su - postgres
 cd data
 vi postgresql.conf
-==> Change parameter wal_level = replica to wal_level = logical
-exit
+==> Search wal_level word an then change parameter wal_level = replica to wal_level = logical
+save and exit
 ```
 Restart project_postgres container
 ```
@@ -194,7 +196,7 @@ curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json
 }'
 ```
 
-**10. Generate sample data:**
+**10. Generate sample data for dimension and fact tables**
 
 ```
 pip install faker
@@ -253,8 +255,6 @@ Monitor topic using rpk commamd
 - rpk topic consume
 - etc.
   
-![image](https://github.com/user-attachments/assets/a89b3cd2-7c62-4272-9cd6-b3581cfa2c32)
-
 Monitor data transfer from topic to postgres using Apache Flink Dashboad.
 
 [http://localhost:8081](http://localhost:8081)
