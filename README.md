@@ -133,7 +133,12 @@ docker exec -it project_postgres psql -U postgres -d hospital -f /opt/create_tab
 python ./src/generate_data_postgres.py
 ```
 
-**8. Setup Debezium**
+**8. Install dbt-biquery on dbt**
+```
+docker exec -it project_dbt_runner bash -c "pip install dbt-bigquery"
+```
+
+**9. Setup Debezium**
 ```
 docker exec -it project_debezium bash
 
@@ -157,12 +162,12 @@ curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json
 }'
 ```
 
-**9. Check Redpanda Topic**
+**10. Check Redpanda Topic**
 ```
 rpk topic list
 ```
 
-**10. Copy Kestra Flow Files**
+**11. Copy Kestra Flow Files**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dbt_run.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_doctors.yaml
@@ -177,7 +182,7 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/
 Kestra Namespace: project
 
 
-**11. Start streaming pipeline via Kestra GUI:**
+**12. Start streaming pipeline via Kestra GUI:**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 - dim_doctors (send json topic files to gs://{GCS_BUCKET}/debezium/doctors}
