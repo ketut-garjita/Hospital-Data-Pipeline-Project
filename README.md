@@ -75,7 +75,10 @@ Schema tables Entity Relationship Diagram (ERD)
 
 **Prerequisites**
 - Docker and Docker Compose installed
-- Google Cloud account with GCS and BigQuery access
+- Google Cloud account with GCS and BigQuery access with minimal the followinh roles:
+    - BigQuery Admin
+    - BigQuery Data Viewer
+    - Storage Admin
 - Json credentials file (rename to gcs.json)
 - Terraform installed (for GCP setup)
 - Kestra installed. You can install using Dockerfile.kestra and docker-compose.kestra.yaml files inside this repository
