@@ -86,7 +86,7 @@ Schema tables Entity Relationship Diagram (ERD)
 
 ```
 git clone https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project.git
-cd hospital-data-pipeline
+cd Hospital-Data-Pipeline-Project
 ```
 
 **2. GCP Credentilas File, Bucket and Dataset**
