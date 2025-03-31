@@ -135,7 +135,6 @@ services:
     container_name: "project_dbt_runner"
     volumes:
       - ./dbt:/usr/app/dbt
-      - ./.dbt:/root/.dbt  # profiles.yml location
     ports:
       - "8087:8080"
     networks:
