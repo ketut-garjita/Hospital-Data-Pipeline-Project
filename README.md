@@ -92,8 +92,20 @@ cd hospital-data-pipeline
 - Put gsc.json file in ./dbt/gcs.json and ./src/pipeline/gcs.json
 - Bucket name: hospital_datalake
 - Dataset: hospital
-  
-**3. Initialize infrastructure:**
+
+**3. Setup network connection for kestra and pgadmin**
+
+Kestra container: kestra
+Pgadmin container: pgadmin
+
+```
+docker network connect hospital_project_net kestra
+docker network connect hospital_project_net pgadmin
+```
+
+**4. Initialize infrastructure:**
+
+Note: make sure terraform has been installed
 
 ```
 cd terraform/
@@ -102,26 +114,26 @@ terraform plan
 terraform apply
 ```
 
-**4. Build and start containers:**
+**5. Build and start containers:**
 
 ```
 docker compose up -d --build
 ```
 
-**5. Initialize database:**
+**6. Initialize database:**
 
 ```
 docker cp ./src/create_tables.sql project_postgres:/opt
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/create_tables.sql
 ```
 
-**6. Generate sample data:**
+**7. Generate sample data:**
 
 ```
 python ./src/generate_data_postgres.py
 ```
 
-**7. Setup Debezium**
+**8. Setup Debezium**
 ```
 docker exec -it project_debezium bash
 
@@ -145,12 +157,12 @@ curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json
 }'
 ```
 
-**8. Check Redpanda Topic**
+**9. Check Redpanda Topic**
 ```
 rpk topic list
 ```
 
-**9. Copy Kestra Flow Files**
+**10. Copy Kestra Flow Files**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dbt_run.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_doctors.yaml
@@ -165,7 +177,7 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/
 Kestra Namespace: project
 
 
-**10. Start streaming pipeline via Kestra GUI:**
+**11. Start streaming pipeline via Kestra GUI:**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 - dim_doctors (send json topic files to gs://{GCS_BUCKET}/debezium/doctors}
@@ -173,12 +185,13 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 - dim_medicines (send json topic files to gs://{GCS_BUCKET}/debezium/medicines}
 - dim_gcs_to_bigquery (upload dimension tables from GCS to BigQuery)
 - streaming_producer (start streaming data to Redpanda topic)
-- flink_topic_to_postgres (upload topic data to PostgreSQL. Debezium will send data changes to Redpanda topic)
+- flink_topic_to_postgres (upload topic data to PostgreSQL. Debezium will automatically send data changes to Redpanda topic)
 - redpanda_debezium_to_gcs (send json topic files to GCS)
 - fact_gcs_to_bigquery (upload fact tables from GCS to BigQuery)
 - dbt_run (run dbt for creating data mart for analytics purpose)
 
 Monitor topic using rpk commamd
+- rpk --help
 - rpk topic list
 - rpk topic consume
 - etc.
@@ -194,6 +207,7 @@ Monitor data transfer from topic to postgres using Apache Flink Dashboad.
 Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http://localhost:8080)
 
 <img width="1067" alt="image" src="https://github.com/user-attachments/assets/cc3abd2e-d741-4dd7-810f-7da451ed6df9" />
+
 
 ---
 ## Dashboard
@@ -241,19 +255,19 @@ total-revenue-by-doctor
 - Predictive models for patient admission rates
 - Resource optimization suggestions
 
-4. Take more advantage of Apache Flink in streaming data processing especially in Cloud environment.
-
+4. Leverage Apache Flink more effectively for streaming data processing, particularly in cloud environments.
+   
 
 ---
 ## Acknowledgments
 
-- Redpanda team for the Kafka-compatible streaming platform
-- dbt Labs for the transformation framework
-- Apache Foundation for Flink and Spark
-- Google Cloud for the data warehousing platform
-- Debezium community for the CDC solution
-- Python Software Foundation has produced a very efficient programming language
-- SQL for data manipulations
-- Terraform for GCP resource provisioning
-- DataTalksCub community is really great
+- Redpanda team for developing the Kafka-compatible streaming platform.
+- dbt Labs for creating the transformation framework.
+- Apache Foundation for providing Flink and Spark.
+- Google Cloud for offering a robust data warehousing platform.
+- Debezium community for developing the CDC solution.
+- Python Software Foundation, which has produced a very efficient programming language.
+- SQL, as a powerful language for data manipulation.
+- Terraform for enabling GCP resource provisioning.
+- DataTalksClub Community, which is truly a great learning platform.
 
