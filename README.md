@@ -179,7 +179,7 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/redpanda_debezium_to_gcs.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/streaming_producer.yaml
 ```
-Kestra Namespace: project
+Kestra Namespace: **project**
 
 
 **12. Start streaming pipeline via Kestra GUI:**
