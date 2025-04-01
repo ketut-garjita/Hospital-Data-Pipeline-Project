@@ -126,12 +126,12 @@ docker restart pgadmin
 ```
 
 **5. Edit /etc/hosts on local server**
-Check IP Address of the project_redpanda and project_postgres
+
+Check IP Address of the project_redpanda and project_postgres container server, and take IPv4Address values.
 ```
 docker network list
 docker network inspect hospital-data-pipeline-project_project_net
 ```
-Check IPv4Address value of the project_redpanda and project_postgres containers.
 
 Edit the /etc/hosts and add two lines on local server
 ```
