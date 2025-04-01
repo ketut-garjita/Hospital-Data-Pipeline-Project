@@ -144,6 +144,8 @@ Edit the /etc/hosts and add two lines on local server
 
 Note: make sure terraform has been installed
 
+Edit main.tf file, entry ProjectID name.
+
 ```
 cd terraform/
 terraform init
