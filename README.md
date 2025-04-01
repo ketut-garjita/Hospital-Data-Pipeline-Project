@@ -27,7 +27,17 @@ Schema tables Entity Relationship Diagram (ERD)
 
 ![image](https://github.com/user-attachments/assets/19b2fff4-5be6-4668-8bb7-a261461da097)
 
+### Input
+- streaming data (initial data generated to redpanda topic)
+- producer streaming data (continue running to redpanda topic)
 
+### Output
+- postgres tables (doctors, patients, medicines, visits, prescriptions, billing_payments)
+- GCS json files
+- BigQuery tables (GCS --> hospital's tables)
+- dbt BigQuery tables
+
+### Processes
 **1. Data Generation & Collection:**
 - Producing data into a Redpanda topic
 - A Python script generates synthetic hospital data
