@@ -93,7 +93,7 @@ Schema tables Entity Relationship Diagram (ERD)
 | project_postgres          | 5433           | 5432            |
 | project_dbt_runner        | 8087           | 8080            |
 | kestra-kestra-1           | 8080, 8084     | 8080, 8081      |
-| kestra-metadata           | 5432           | 5432            |
+| kestra-metadata-1         | 5432           | 5432            |
 | kestra-pgadmin-1          | 8085           | 80              |
 
 
@@ -133,24 +133,24 @@ docker compose up -d --build
 
 **4. Setup network connection for kestra and pgadmin**
 
-Kestra metadata container: kestra-metadata
+Kestra metadata container: kestra-metadata-1
 
-Kestra container: kestra
+Kestra container: kestra-kestra-1
 
-Pgadmin container: pgadmin
+Pgadmin container: kestra-pgadmin-1
 
 Customize with your kestra and pgadmin container name.
 
 ```
-docker start kestra-metadata
-docker staet kestra
-docker start pgadmin 
-docker network connect hospital-data-pipeline-project_project_net kestra-metadata
-docker network connect hospital-data-pipeline-project_project_net kestra
-docker network connect hospital-data-pipeline-project_project_net pgadmin
-docker restart kestra-metadata
-docker restart kestra
-docker restart pgadmin 
+docker start kestra-metadata-1
+docker staet kestra-kestra-1
+docker start kestra-pgadmin-1
+docker network connect hospital-data-pipeline-project_project_net kestra-metadata-1
+docker network connect hospital-data-pipeline-project_project_net kestra-kestra-1
+docker network connect hospital-data-pipeline-project_project_net kestra-pgadmin-1
+docker restart kestra-metadata-1
+docker restart kestra-kestra-1
+docker restart kestra-pgadmin-1
 ```
 
 **5. Edit /etc/hosts on local server**
