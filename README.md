@@ -239,7 +239,7 @@ $ curl -X GET http://localhost:8083/connectors
 ["postgres-source"][kafka@d63b2692723d ~]
 ```
 
-Check conenction status:
+Check connection status:
 ```
 $ curl -X GET http://localhost:8083/connectors
 
