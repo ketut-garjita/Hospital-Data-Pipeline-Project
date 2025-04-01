@@ -250,9 +250,6 @@ Kestra Namespace: **project**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
-- **dim_gcs_to_bigquery**
-  _(upload dimension tables from GCS to BigQuery)_
-
 - **dim_doctors**
   _(send doctors json topic file to GCS)_
 
@@ -261,6 +258,9 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
   
 - **dim_medicines**
   _(send medicines json topic file to GCS)_
+
+- **dim_gcs_to_bigquery**
+  _(upload dimension tables from GCS to BigQuery)_
 
 - **streaming_producer**
   _(start streaming data to Redpanda topic)_
