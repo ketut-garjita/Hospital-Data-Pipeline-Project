@@ -180,6 +180,8 @@ docker exec -it project_postgres psql -U postgres -d hospital -f /opt/create_tab
 docker exec -it project_debezium bash
 ```
 
+Type (copy & paste) commands below:
+
 ```
 curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d '{
   "name": "postgres-source",
