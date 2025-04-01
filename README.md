@@ -36,6 +36,7 @@ Schema tables Entity Relationship Diagram (ERD)
 - GCS json files
 - BigQuery tables (GCS --> hospital's tables)
 - dbt BigQuery tables
+- Dashboard (Visualization)
 
 ### Processes
 **1. Data Generation & Collection:**
