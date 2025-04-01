@@ -118,6 +118,7 @@ Customize with your kestra and pgadmin container name.
 docker start kestra-metadata
 docker staet kestra
 docker start pgadmin 
+docker network connect hospital-data-pipeline-project_project_net kestra-metadata
 docker network connect hospital-data-pipeline-project_project_net kestra
 docker network connect hospital-data-pipeline-project_project_net pgadmin
 docker restart kestra-metadata
