@@ -28,8 +28,8 @@ Schema tables Entity Relationship Diagram (ERD)
 ![image](https://github.com/user-attachments/assets/19b2fff4-5be6-4668-8bb7-a261461da097)
 
 ### Input
-- streaming data (initial data generated to redpanda topic)
-- producer streaming data (continue running to redpanda topic)
+- Postgres table creation and data initialization (dimension and fact tables) 
+- Producer streaming data (continue running to redpanda topics)
 
 ### Output
 - postgres tables (doctors, patients, medicines, visits, prescriptions, billing_payments)
@@ -214,6 +214,22 @@ curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json
     "database.history.kafka.topic": "schema-changes"
   }
 }'
+```
+
+Check connection:
+```
+$ curl -X GET http://localhost:8083/connectors
+
+["postgres-source"][kafka@d63b2692723d ~]
+```
+
+Check conenction status:
+```
+$ curl -X GET http://localhost:8083/connectors
+
+["postgres-source"][kafkcurl -X GET http://localhost:8083/connectors/postgres-source/statustgres-source/status
+{"name":"postgres-source","connector":{"state":"RUNNING","worker_id":"172.23.0.3:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"172.23.0.3:8083"}],"type":"source"}[kafka@d63b2692723d ~]$ 
+[kafka@d63b2692723d ~]
 ```
 
 **10. Generate sample data for dimension and fact tables**
