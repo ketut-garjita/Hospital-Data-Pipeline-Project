@@ -38,7 +38,7 @@ Schema tables Entity Relationship Diagram (ERD)
 - dbt BigQuery tables
 - Dashboard (Visualization)
 
-### Processes
+### Process
 **1. Data Generation & Collection:**
 - Producing data into a Redpanda topic
 - A Python script generates synthetic hospital data
