@@ -60,20 +60,6 @@ Schema tables Entity Relationship Diagram (ERD)
 - Kestra for workflow orchestration
 - Looker for dashboards and business intelligence
 
-Docker Containers Port
-
-| Container                | Name                     | Localhost Port | Container Port  |
-|--------------------------|--------------------------|----------------|-----------------|
-| project_redpanda         |                          | 9092           | 9092, 29092     |
-| project_flink_taskmanager |                          |                | 8081            |
-| project_flink_jobmanager |                          | 8081           | 8081            |
-| project_debezium         |                          | 8083           | 8083            |
-| project_postgres         |                          | 5433           | 5432            |
-| project_dbt_runner       |                          | 8087           | 8080            |
-| kestra-kestra-1          |                          | 8080, 8084     | 8080, 8081      |
-| kestra-metadata          |                          | 5432           | 5432            |
-| kestra-pgadmin-1         |                          | 8085           | 80              |
-
 
 ---
 ## Technologies
@@ -97,17 +83,17 @@ Docker Containers Port
 ---
 ## Docker Containers Port
 
-| Container                | Name                     | Localhost Port | Container Port  |
-|--------------------------|--------------------------|----------------|-----------------|
-| project_redpanda         |                          | 9092           | 9092, 29092     |
-| project_flink_taskmanager |                          |                | 8081            |
-| project_flink_jobmanager |                          | 8081           | 8081            |
-| project_debezium         |                          | 8083           | 8083            |
-| project_postgres         |                          | 5433           | 5432            |
-| project_dbt_runner       |                          | 8087           | 8080            |
-| kestra-kestra-1          |                          | 8080, 8084     | 8080, 8081      |
-| kestra-metadata          |                          | 5432           | 5432            |
-| kestra-pgadmin-1         |                          | 8085           | 80              |
+| Container_Name            | Localhost_Port | Container_Port  |
+|---------------------------|----------------|-----------------|
+| project_redpanda          | 9092           | 9092, 29092     |
+| project_flink_taskmanager |                | 8081            |
+| project_flink_jobmanager  | 8081           | 8081            |
+| project_debezium          | 8083           | 8083            |
+| project_postgres          | 5433           | 5432            |
+| project_dbt_runner        | 8087           | 8080            |
+| kestra-kestra-1           | 8080, 8084     | 8080, 8081      |
+| kestra-metadata           | 5432           | 5432            |
+| kestra-pgadmin-1          | 8085           | 80              |
 
 
 ---
