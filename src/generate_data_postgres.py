@@ -4,7 +4,7 @@ import random
 from datetime import datetime, timedelta
 
 # Connect to PostgreSQL
-conn = psycopg2.connect("host=project_postgres dbname=hospital user=postgres password=postgres")
+conn = psycopg2.connect("host=project_postgres port=5433 dbname=hospital user=postgres password=postgres")
 cur = conn.cursor()
 faker = Faker()
 
