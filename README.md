@@ -246,7 +246,12 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/
 Kestra Namespace: **project**
 
 
-**13. Start streaming pipeline via Kestra GUI:**
+**13. Install Docker CLI from Ubuntu repositories on Kestra Container
+```
+apt-get update && apt-get install -y docker.io
+```
+
+**14. Start streaming pipeline via Kestra GUI:**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
