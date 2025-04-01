@@ -360,6 +360,11 @@ Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http:
 
   ![image](https://github.com/user-attachments/assets/7a8d326a-b69d-4cc0-99d4-83681832482c)
 
+**PySpark**
+
+-  Extract data from Postgres and upload to GCS in json format files [here](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/pyspark_extract_upload_gcs.py)
+-  [Sample visualization script and reports](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/hospital_visualization_reports.ipynb)
+   
 **NOTES**
 
 Shell scripts:
