@@ -246,7 +246,7 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/
 Kestra Namespace: **project**
 
 
-**13. Install Docker CLI from Ubuntu repositories on Kestra Container
+**13. Install Docker CLI from Ubuntu repositories on Kestra Container**
 ```
 apt-get update && apt-get install -y docker.io
 ```
