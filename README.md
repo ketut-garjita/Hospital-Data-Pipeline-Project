@@ -143,7 +143,7 @@ Customize with your kestra and pgadmin container name.
 
 ```
 docker start kestra-metadata-1
-docker staet kestra-kestra-1
+docker start kestra-kestra-1
 docker start kestra-pgadmin-1
 docker network connect hospital-data-pipeline-project_project_net kestra-metadata-1
 docker network connect hospital-data-pipeline-project_project_net kestra-kestra-1
