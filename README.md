@@ -255,17 +255,22 @@ apt-get update && apt-get install -y docker.io
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
+**Dimension Tables:**
+
 - **dim_doctors**
   _(send doctors json topic file to GCS)_
 
 - **dim_patients**
-  _(send patents json topic file to GCS)_
+  _(send patients json topic file to GCS)_
   
 - **dim_medicines**
   _(send medicines json topic file to GCS)_
 
 - **dim_gcs_to_bigquery**
   _(upload dimension tables from GCS to BigQuery)_
+  
+
+**Fact Tables:**
 
 - **streaming_producer**
   _(start streaming data to Redpanda topic)_
@@ -278,6 +283,9 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 
 - **fact_gcs_to_bigquery**
   _(upload fact tables from GCS to BigQuery)_
+
+
+**dbt:**
 
 - **dbt_run**
   _(run dbt for creating data mart for analytics purpose)_
