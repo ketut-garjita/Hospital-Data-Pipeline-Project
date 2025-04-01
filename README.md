@@ -234,6 +234,9 @@ Ctrl+C
 **12. Copy Kestra Flow Files**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dbt_run.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_doctors.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_patients.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_medicines.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_gcs_to_bigquery.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/fact_gcs_to_bigquery.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/flink_topic_to_postgres.yaml
@@ -249,6 +252,15 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 
 - **dim_gcs_to_bigquery**
   _(upload dimension tables from GCS to BigQuery)_
+
+- **dim_doctors**
+  _(send doctors json topic file to GCS)_
+
+- **dim_patients**
+  _(send patents json topic file to GCS)_
+  
+- **dim_medicines**
+  _(send medicines json topic file to GCS)_
 
 - **streaming_producer**
   _(start streaming data to Redpanda topic)_
