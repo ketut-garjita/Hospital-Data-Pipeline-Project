@@ -355,7 +355,7 @@ Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http:
 
 **dbt**
 - dbt debug
-- dbt run
+- dbt run (executed via kestra flow)
 - dbt docs generate
 - dbt docs serve --port 8080 --host 0.0.0.0
 - url: [http://localhost:8087](http://localhost:8087)
