@@ -233,10 +233,6 @@ Ctrl+C
 
 **12. Copy Kestra Flow Files**
 ```
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dbt_run.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_doctors.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_patients.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_medicines.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_gcs_to_bigquery.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/fact_gcs_to_bigquery.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/flink_topic_to_postgres.yaml
@@ -249,15 +245,6 @@ Kestra Namespace: **project**
 **13. Start streaming pipeline via Kestra GUI:**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
-
-- **dim_doctors**
-  _(send json topic files to gs://{GCS_BUCKET}/debezium/doctors)_
-
-- **dim_patients**
-  _(send json topic files to gs://{GCS_BUCKET}/debezium/patients)_
-
-- **dim_medicines**
-  _(send json topic files to gs://{GCS_BUCKET}/debezium/medicines)_
 
 - **dim_gcs_to_bigquery**
   _(upload dimension tables from GCS to BigQuery)_
