@@ -32,7 +32,7 @@ Schema tables Entity Relationship Diagram (ERD)
 - Producer streaming data (continue running to redpanda topics)
 
 ### Output
-- postgres tables (doctors, patients, medicines, visits, prescriptions, billing_payments)
+- Postgres tables (doctors, patients, medicines, visits, prescriptions, billing_payments)
 - GCS json files
 - BigQuery tables (GCS --> hospital's tables)
 - dbt BigQuery tables
