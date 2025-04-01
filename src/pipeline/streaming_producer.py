@@ -5,7 +5,7 @@ from datetime import datetime
 from confluent_kafka import Producer
 
 KAFKA_CONFIG = {
-    "bootstrap.servers": "192.168.32.3:29092"
+    "bootstrap.servers": "project_redpanda:29092"
 }
 
 TOPIC_VISITS = "visits_topic"
