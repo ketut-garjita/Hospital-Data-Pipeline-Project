@@ -197,7 +197,7 @@ terraform plan
 terraform apply
 ```
 
-**6. Change parameter of wal_level =  logical on postgresql.conf
+**6. Change parameter of wal_level =  logical on postgresql.conf**
 
 Copy ./src/postgresql.conf to project_postgres:/var/lib/postgresql/data/
 
