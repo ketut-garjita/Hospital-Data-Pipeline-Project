@@ -132,8 +132,6 @@ services:
       - ./src/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
       - ./src/create_tables.sql:/opt/src/create_tables.sql
       - ./src/generate_data_postgres.py:/opt/src/generate_data_postgres.py
-    command:
-      - pip install faker
     environment:
       - POSTGRES_DB=hospital
       - POSTGRES_USER=postgres
