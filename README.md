@@ -367,7 +367,7 @@ Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http:
 **dbt**
 - url: [http://localhost:8087](http://localhost:8087)
 
-  <img width="252" alt="image" src="https://github.com/user-attachments/assets/cc82dca9-b6ea-432a-9463-0d6b81d0ff6b" />
+  ![image](https://github.com/user-attachments/assets/6eeb8f45-b458-4620-9686-b6c9fe50cf85)
 
   ![image](https://github.com/user-attachments/assets/7a8d326a-b69d-4cc0-99d4-83681832482c)
 
