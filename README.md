@@ -113,7 +113,6 @@ Schema tables Entity Relationship Diagram (ERD)
     ```
     apt-get update && apt-get install -y docker.io
     ```
-    Or you can install Kestra using Dockerfile.kestra and docker-compose.kestra.yaml files inside this repository
 - pgadmin
 
 **Setup Instructions**
