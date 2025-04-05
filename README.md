@@ -109,11 +109,11 @@ Schema tables Entity Relationship Diagram (ERD)
 - Json credentials file (rename to gcs.json)
 - Terraform installed (for GCP setup)
 - Kestra installed
-- Install Docker CLI (docker.io) from Ubuntu repositories on Kestra Container**
+- Install Docker CLI (docker.io) from Ubuntu repositories on Kestra Container
     ```
     apt-get update && apt-get install -y docker.io
     ```
-    Or You can install using Dockerfile.kestra and docker-compose.kestra.yaml files inside this repository
+    Or you can install Kestra using Dockerfile.kestra and docker-compose.kestra.yaml files inside this repository
 - pgadmin
 
 **Setup Instructions**
@@ -158,12 +158,13 @@ docker restart kestra-pgadmin-1
 
 **5. Initialize infrastructure:**
 
-Note: make sure terraform has been installed
+Ensure terraform has been installed.
 
 Edit main.tf file:
 - **Entry ProjectID name**
 - Bucket name: hospital_datalake
 - Dataset: hospital
+  
 ```
 cd terraform/
 terraform init
@@ -174,7 +175,7 @@ terraform apply
 **6. Initialize database:**
 
 ```
-docker exec -it project_postgres psql -U postgres -d hospital -f /opt/create_tables.sql
+docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
 ```
 
 **7. Setup Debezium**
@@ -192,6 +193,7 @@ $ curl -X GET http://localhost:8083/connectors
 **8. Generate sample data for dimension and fact tables**
 
 ```
+# via local server
 pip install faker
 python ./src/generate_data_postgres.py
 ```
