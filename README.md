@@ -168,8 +168,25 @@ docker restart kestra-pgadmin-1
 
 Ensure terraform has been installed.
 
-Edit main.tf file:
-- **Entry ProjectID name**
+Edit terraform/main.tf file:
+
+```
+provider "google" {
+  project = "your project
+  region  = "your region"
+}
+
+resource "google_storage_bucket" "hospital_bucket" {
+  name     = "hospital_datalake"
+  location = "your region"
+}
+
+resource "google_bigquery_dataset" "hospital_dataset" {
+  dataset_id = "hospital"
+}
+```
+
+- Replace <your project> with your ProjectID and <your name> with your project region location
 - Bucket name: hospital_datalake
 - Dataset: hospital
   
@@ -192,10 +209,10 @@ docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create
 docker exec -it project_debezium bash -c "/opt/src/curl_postgres_connector.sh"
 
 # Check connection:
-$ curl -X GET http://localhost:8083/connectors
+curl -X GET http://localhost:8083/connectors
 
 # Check connection status:
-$ curl -X GET http://localhost:8083/connectors
+curl -X GET http://localhost:8083/connectors/postgres-source/status
 ```
 
 **8. Generate sample data for dimension and fact tables**
@@ -207,6 +224,10 @@ python ./src/generate_data_postgres.py
 ```
 
 **9. Check Redpanda Topics**
+```
+docker exec -it project_redpanda bash
+```
+
 ```
 rpk topic list
 ```
