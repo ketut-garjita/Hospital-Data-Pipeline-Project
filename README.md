@@ -136,11 +136,11 @@ docker compose up -d --build
 
 **4. Setup network connection for kestra and pgadmin**
 
-Kestra metadata container: kestra-metadata-1
+Kestra metadata container: **kestra-metadata-1**
 
-Kestra container: kestra-kestra-1
+Kestra container: **kestra-kestra-1**
 
-Pgadmin container: kestra-pgadmin-1
+Pgadmin container: **kestra-pgadmin-1**
 
 Customize with your kestra and pgadmin container name.
 
