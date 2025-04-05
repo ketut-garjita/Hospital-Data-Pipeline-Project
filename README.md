@@ -82,16 +82,16 @@ Schema tables Entity Relationship Diagram (ERD)
 
 
 ---
-## Docker Containers Port and IP Address
+## Docker Containers Port
 
-| Container_Name            | Localhost_Port | Container_Port  | Static IP
-|---------------------------|----------------|-----------------|----------
-| project_redpanda          | 9092           | 9092, 29092     | 10.0.0.10
-| project_debezium          | 8083           | 8083            | 10.0.0.11
-| project_flink_taskmanager |                | 8081            | 10.0.0.12
-| project_flink_jobmanager  | 8081           | 8081            | 10.0.0.13
-| project_postgres          | 5433           | 5432            | 10.0.0.14
-| project_dbt_runner        | 8087           | 8080            | 10.0.0.15
+| Container_Name            | Localhost_Port | Container_Port  |
+|---------------------------|----------------|-----------------|
+| project_redpanda          | 9092           | 9092, 29092     |
+| project_debezium          | 8083           | 8083            |
+| project_flink_taskmanager |                | 8081            |
+| project_flink_jobmanager  | 8081           | 8081            |
+| project_postgres          | 5433           | 5432            |
+| project_dbt_runner        | 8087           | 8080            |
 | kestra-kestra-1           | 8080, 8084     | 8080, 8081      |
 | kestra-metadata-1         | 5432           | 5432            |
 | kestra-pgadmin-1          | 8085           | 80              |
@@ -248,8 +248,23 @@ rpk topic consume postgres-source.public.visits
 ```
 Ctrl+C
 
+**10. Impoer flow files from repository to kestra**
+```
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_doctors.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_patients.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_medicines.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_gcs_to_bigquery.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/streaming_producer.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/flink_topic_to_postgres.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/redpanda_debezium_to_gcs.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/fact_gcs_to_bigquery.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dbt_run.yaml
+```
+Namespace: project
 
-**14. Start streaming pipeline via Kestra GUI**
+<img width="328" alt="image" src="https://github.com/user-attachments/assets/f31a331e-d4d0-46ec-bb4f-df9a05d53b8e" />
+
+**11. Start streaming pipeline via Kestra GUI**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
