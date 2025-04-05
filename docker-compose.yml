@@ -101,6 +101,7 @@ services:
     volumes:
       - ./:/opt/flink/usrlib
       - ./src/:/opt/src
+      - ./gcs.json:/opt/src/pipeline/gcs.json
     depends_on:
       - jobmanager
     command: taskmanager --taskmanager.registration.timeout 5 min 
