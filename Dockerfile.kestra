@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     apt-transport-https \
     ca-certificates \
     gnupg \
+    docker.io \
     && rm -rf /var/lib/apt/lists/*
 
 # Add Google Cloud SDK repository and install gcloud CLI

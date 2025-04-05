@@ -1,6 +1,10 @@
 networks:
   project_net:
     driver: bridge
+    ipam:
+      config:
+        - subnet: "10.0.0.0/16"
+          gateway: "10.0.0.1"
 
 services:
   redpanda-1:
@@ -35,8 +39,8 @@ services:
       - 28082:28082
       - 29092:29092
     networks:
-      - project_net
-
+       project_net:
+          ipv4_address: 10.0.0.10
   connect:
     image: debezium/connect:2.3
     container_name: "project_debezium"
@@ -50,15 +54,18 @@ services:
       - BOOTSTRAP_SERVERS=project_redpanda:29092
     volumes:
       - ./pg-source.json:/kafka/config/pg-source.json
+      - ./src/curl_postgres_connector.sh:/opt/src
+      - ./src/flows:/opt/src/flows
     networks:
-      - project_net
+      project_net:
+          ipv4_address: 10.0.0.11
     depends_on:
       - redpanda-1
 
   jobmanager:
-    build:
-      context: .
-      dockerfile: ./Dockerfile.flink
+    #build:
+    #  context: .
+    #  dockerfile: ./Dockerfile.flink
     image: pyflink:2.12
     container_name: "project_flink_jobmanager"
     pull_policy: never
@@ -69,18 +76,19 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - project_net
+      project_net:
+          ipv4_address: 10.0.0.12
     volumes:
       - ./:/opt/flink/usrlib
       - ./keys/:/var/private/ssl/
       - ./src/:/opt/src
-      - /var/run/docker.sock:/var/run/docker.sock
     command: jobmanager 
     extra_hosts:
       - "host.docker.internal:127.0.0.1" #// Linux
       - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
     environment:
-      - POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://host.docker.internal:5432/postgres}
+      #- POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://host.docker.internal:5432/postgres}
+      - POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://10.0.0.14:5432/postgres}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_DB=${POSTGRES_DB:-postgres}
@@ -100,7 +108,6 @@ services:
     volumes:
       - ./:/opt/flink/usrlib
       - ./src/:/opt/src
-      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - jobmanager
     command: taskmanager --taskmanager.registration.timeout 5 min 
@@ -114,20 +121,28 @@ services:
         taskmanager.numberOfTaskSlots: 15
         parallelism.default: 3
     networks:
-      - project_net
+      project_net:
+          ipv4_address: 10.0.0.13
 
   postgres:
     image: postgres:14
     restart: on-failure
     container_name: "project_postgres"
+    volumes:
+      - ./src/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - ./src/create_tables.sql:/opt/src/create_tables.sql
+      - ./src/generate_data_postgres.py:/opt/src/generate_data_postgres.py
+    command:
+      - pip install faker
     environment:
       - POSTGRES_DB=hospital
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
-      - project_net
+      project_net:
+          ipv4_address: 10.0.0.14
     extra_hosts:
      - "host.docker.internal:127.0.0.1" #// Linux
      - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
@@ -137,10 +152,12 @@ services:
     container_name: "project_dbt_runner"
     volumes:
       - ./dbt:/usr/app/dbt
+      - ./.dbt:/root/.dbt  # profiles.yml location
     ports:
       - "8087:8080"
     networks:
-      - project_net
+      project_net:
+          ipv4_address: 10.0.0.15
     working_dir: /usr/app/dbt
     environment:
       - DBT_PROFILES_DIR=/usr/app/dbt
