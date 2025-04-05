@@ -82,16 +82,16 @@ Schema tables Entity Relationship Diagram (ERD)
 
 
 ---
-## Docker Containers Port
+## Docker Containers Port and IP Address
 
-| Container_Name            | Localhost_Port | Container_Port  |
-|---------------------------|----------------|-----------------|
-| project_redpanda          | 9092           | 9092, 29092     |
-| project_flink_taskmanager |                | 8081            |
-| project_flink_jobmanager  | 8081           | 8081            |
-| project_debezium          | 8083           | 8083            |
-| project_postgres          | 5433           | 5432            |
-| project_dbt_runner        | 8087           | 8080            |
+| Container_Name            | Localhost_Port | Container_Port  | Static IP
+|---------------------------|----------------|-----------------|----------
+| project_redpanda          | 9092           | 9092, 29092     | 10.0.0.10
+| project_debezium          | 8083           | 8083            | 10.0.0.11
+| project_flink_taskmanager |                | 8081            | 10.0.0.12
+| project_flink_jobmanager  | 8081           | 8081            | 10.0.0.13
+| project_postgres          | 5433           | 5432            | 10.0.0.14
+| project_dbt_runner        | 8087           | 8080            | 10.0.0.15
 | kestra-kestra-1           | 8080, 8084     | 8080, 8081      |
 | kestra-metadata-1         | 5432           | 5432            |
 | kestra-pgadmin-1          | 8085           | 80              |
@@ -108,7 +108,12 @@ Schema tables Entity Relationship Diagram (ERD)
     - Storage Admin
 - Json credentials file (rename to gcs.json)
 - Terraform installed (for GCP setup)
-- Kestra installed. You can install using Dockerfile.kestra and docker-compose.kestra.yaml files inside this repository
+- Kestra installed
+- Install Docker CLI (docker.io) from Ubuntu repositories on Kestra Container**
+    ```
+    apt-get update && apt-get install -y docker.io
+    ```
+    Or You can install using Dockerfile.kestra and docker-compose.kestra.yaml files inside this repository
 - pgadmin
 
 **Setup Instructions**
@@ -120,10 +125,8 @@ git clone https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project.git
 cd Hospital-Data-Pipeline-Project
 ```
 
-**2. GCP Credentilas File, Bucket and Dataset**
-- Put gsc.json file in ./dbt/gcs.json and ./src/pipeline/gcs.json
-- Bucket name: hospital_datalake
-- Dataset: hospital
+**2. GCP Credentilas File**
+- Save gsc.json file in Hospital-Data-Pipeline-Project directory
 
 **3. Build and start containers:**
 
@@ -153,26 +156,14 @@ docker restart kestra-kestra-1
 docker restart kestra-pgadmin-1
 ```
 
-**5. Edit /etc/hosts on local server**
-
-Check IP Address of the project_redpanda and project_postgres container server, and take IPv4Address values.
-```
-docker network list
-docker network inspect hospital-data-pipeline-project_project_net
-```
-
-Edit the /etc/hosts and add two lines on local server
-```
-<IPv4Address> project_redpanda
-<IPv4Address> project_postgres
-```
-
-**6. Initialize infrastructure:**
+**5. Initialize infrastructure:**
 
 Note: make sure terraform has been installed
 
-Edit main.tf file, entry ProjectID name.
-
+Edit main.tf file:
+- **Entry ProjectID name**
+- Bucket name: hospital_datalake
+- Dataset: hospital
 ```
 cd terraform/
 terraform init
@@ -180,88 +171,36 @@ terraform plan
 terraform apply
 ```
 
-**7. Change wal_level = logical in postgresql.conf file**
-```
-docker exec -it project_postgres bash
-```
-```
-apt update
-apt install -y vim
-su - postgres
-cd data
-vi postgresql.conf
-==> Search wal_level word and then change parameter wal_level = replica to wal_level = logical
-save and exit
-```
-Restart project_postgres container
-```
-docker restart project_postgres
-```
-
-**8. Initialize database:**
+**6. Initialize database:**
 
 ```
-docker cp ./src/create_tables.sql project_postgres:/opt
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/create_tables.sql
 ```
 
-**9. Setup Debezium**
+**7. Setup Debezium**
 ```
-docker exec -it project_debezium bash
-```
+# Setup connector for postgres schema tables:
+docker exec -it project_debezium bash -c "/opt/src/curl_postgres_connector.sh"
 
-Type (copy & paste) commands below:
-
-```
-curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d '{
-  "name": "postgres-source",
-  "config": {
-    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-    "database.hostname": "project_postgres",
-    "database.port": "5432",
-    "database.user": "postgres",
-    "database.password": "postgres",
-    "database.dbname": "hospital",
-    "database.server.name": "postgres_source",
-    "slot.name": "debezium_slot",
-    "plugin.name": "pgoutput",
-    "table.include.list": "public.*", 
-    "topic.prefix": "postgres-source",
-    "database.history.kafka.bootstrap.servers": "project_redpanda:29092",
-    "database.history.kafka.topic": "schema-changes"
-  }
-}'
-```
-
-Check connection:
-```
+# Check connection:
 $ curl -X GET http://localhost:8083/connectors
 
-["postgres-source"][kafka@d63b2692723d ~]
-```
-
-Check connection status:
-```
+# Check connection status:
 $ curl -X GET http://localhost:8083/connectors
-
-["postgres-source"][kafkcurl -X GET http://localhost:8083/connectors/postgres-source/statustgres-source/status
-{"name":"postgres-source","connector":{"state":"RUNNING","worker_id":"172.23.0.3:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"172.23.0.3:8083"}],"type":"source"}[kafka@d63b2692723d ~]$ 
-[kafka@d63b2692723d ~]
 ```
 
-**10. Generate sample data for dimension and fact tables**
+**8. Generate sample data for dimension and fact tables**
 
 ```
 pip install faker
 python ./src/generate_data_postgres.py
 ```
 
-**11. Check Redpanda Topic**
+**9. Check Redpanda Topic**
 ```
 rpk topic list
 ```
 ```
-redpanda@4350801d7c77:/$ rpk topic list
 NAME                                     PARTITIONS  REPLICAS
 connect_configs                          1           1
 connect_offsets                          25          1
@@ -279,26 +218,6 @@ rpk topic consume postgres-source.public.visits
 Ctrl+C
 
 
-**12. Copy Kestra Flow Files**
-```
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dbt_run.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_doctors.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_patients.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_medicines.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/dim_gcs_to_bigquery.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/fact_gcs_to_bigquery.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/flink_topic_to_postgres.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/redpanda_debezium_to_gcs.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@src/flows/streaming_producer.yaml
-```
-Kestra Namespace: **project**
-
-
-**13. Install Docker CLI from Ubuntu repositories on Kestra Container**
-```
-apt-get update && apt-get install -y docker.io
-```
-
 **14. Start streaming pipeline via Kestra GUI:**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
@@ -306,37 +225,37 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 **Dimension Tables:**
 
 - **dim_doctors**
-  _(send doctors json topic file to GCS)_
+  - This is for sending doctors json topic file to GCS
 
 - **dim_patients**
-  _(send patients json topic file to GCS)_
+  - This is for sending patients json topic file to GCS
   
 - **dim_medicines**
-  _(send medicines json topic file to GCS)_
+  - This is for sending medicines json topic file to GCS
 
 - **dim_gcs_to_bigquery**
-  _(upload dimension tables from GCS to BigQuery)_
+  - This is for uploading dimension tables from GCS to BigQuery
   
 
 **Fact Tables:**
 
 - **streaming_producer**
-  _(start streaming data to Redpanda topic)_
+  This is for start streaming data to Redpanda topic
 
 - **flink_topic_to_postgres**
-  _(upload topic data to PostgreSQL. Debezium will automatically send data changes to Redpanda topic)_
+  - This is for uploading topic data to PostgreSQL. Debezium will automatically sending data changes to Redpanda topic,
 
 - **redpanda_debezium_to_gcs**
-  _(send json topic files to GCS)_
+  - This is for sending json topic files to GCS
 
 - **fact_gcs_to_bigquery**
-  _(upload fact tables from GCS to BigQuery)_
+  - This is for uploading fact tables from GCS to BigQuery
 
 
 **dbt:**
 
 - **dbt_run**
-  _(run dbt for creating data mart for analytics purpose)_
+  - This is for running dbt to create data mart for analytics
 
 Monitor topic using rpk commamd
 - rpk --help
