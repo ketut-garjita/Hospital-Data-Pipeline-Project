@@ -75,6 +75,7 @@ services:
       - ./:/opt/flink/usrlib
       - ./keys/:/var/private/ssl/
       - ./src/:/opt/src
+      - ./gcs.json:/opt/src/pipeline/gcs.json
     command: jobmanager 
     extra_hosts:
       - "host.docker.internal:127.0.0.1" #// Linux
@@ -141,6 +142,7 @@ services:
     volumes:
       - ./dbt:/usr/app/dbt
       - ./.dbt:/root/.dbt  # profiles.yml location
+      - ./gcs.json:/usr/app/dbt/gcs.json
     ports:
       - "8087:8080"
     networks:
