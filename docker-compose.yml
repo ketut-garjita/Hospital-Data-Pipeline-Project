@@ -63,9 +63,9 @@ services:
       - redpanda-1
 
   jobmanager:
-    #build:
-    #  context: .
-    #  dockerfile: ./Dockerfile.flink
+    build:
+      context: .
+      dockerfile: ./Dockerfile.flink
     image: pyflink:2.12
     container_name: "project_flink_jobmanager"
     pull_policy: never
