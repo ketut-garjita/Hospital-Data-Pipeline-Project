@@ -126,7 +126,7 @@ cd Hospital-Data-Pipeline-Project
 ```
 
 **2. GCP Credentilas File**
-- Save gsc.json file in Hospital-Data-Pipeline-Project directory
+- Save your gsc.json file to Hospital-Data-Pipeline-Project directory
 
 **3. Build and start containers**
 
