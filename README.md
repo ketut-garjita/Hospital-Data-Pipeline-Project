@@ -197,13 +197,22 @@ terraform plan
 terraform apply
 ```
 
-**6. Initialize database**
+**6. Change parameter of wal_level =  logical on postgresql.conf
+
+Copy ./src/postgresql.conf to project_postgres:/var/lib/postgresql/data/
+
+```
+docker cp ./src/postgresql.conf project_postgres:/var/lib/postgresql/data/postgresql.conf 
+docker restart project_postgres
+```
+
+**7. Initialize database**
 
 ```
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
 ```
 
-**7. Setup Debezium**
+**8. Setup Debezium**
 ```
 # Setup connector for postgres schema tables:
 docker exec -it project_debezium bash -c "/opt/src/curl_postgres_connector.sh"
@@ -215,7 +224,7 @@ curl -X GET http://localhost:8083/connectors
 curl -X GET http://localhost:8083/connectors/postgres-source/status
 ```
 
-**8. Generate sample data for dimension and fact tables**
+**9. Generate sample data for dimension and fact tables**
 
 ```
 # via local server
@@ -223,7 +232,7 @@ pip install faker
 python ./src/generate_data_postgres.py
 ```
 
-**9. Check Redpanda Topics**
+**10. Check Redpanda Topics**
 ```
 docker exec -it project_redpanda bash
 ```
@@ -248,7 +257,7 @@ rpk topic consume postgres-source.public.visits
 ```
 Ctrl+C
 
-**10. Import flow files from repository to kestra**
+**11. Import flow files from repository to kestra**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_doctors.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_patients.yaml
@@ -264,7 +273,7 @@ Namespace: project
 
 <img width="328" alt="image" src="https://github.com/user-attachments/assets/f31a331e-d4d0-46ec-bb4f-df9a05d53b8e" />
 
-**11. Start streaming pipeline via Kestra GUI**
+**12. Start streaming pipeline via Kestra GUI**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
