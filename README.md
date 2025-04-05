@@ -16,9 +16,9 @@ Our solution integrates this data into a unified analytics platform with near re
 
 Schema tables Entity Relationship Diagram (ERD)
 
-[Hospital Tables ERD](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/Hospital_ERD.png)
+![image](https://github.com/user-attachments/assets/9c82b2f7-37a2-496a-b773-4e9d01d565bc)
 
-![image](https://github.com/user-attachments/assets/49c00983-2d25-4720-8c9a-ca280970caf1)
+[https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/Hospital_Schema_ERD.png](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/Hospital_Schema_ERD.png)
 
 
 ---
