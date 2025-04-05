@@ -1,10 +1,6 @@
 networks:
   project_net:
     driver: bridge
-    ipam:
-      config:
-        - subnet: "172.23.0.0/16"
-          gateway: "172.23.0.1"
 
 services:
   redpanda-1:
@@ -39,8 +35,7 @@ services:
       - 28082:28082
       - 29092:29092
     networks:
-       project_net:
-          ipv4_address: 172.23.0.10
+      - project_net
   connect:
     image: debezium/connect:2.3
     container_name: "project_debezium"
@@ -57,8 +52,7 @@ services:
       - ./src/curl_postgres_connector.sh:/opt/src/curl_postgres_connector.sh
       - ./src/flows:/opt/src/flows
     networks:
-      project_net:
-          ipv4_address: 172.23.0.11
+      - project_net
     depends_on:
       - redpanda-1
 
@@ -76,8 +70,7 @@ services:
     ports:
       - "8081:8081"
     networks:
-      project_net:
-          ipv4_address: 172.23.0.12
+      - project_net
     volumes:
       - ./:/opt/flink/usrlib
       - ./keys/:/var/private/ssl/
@@ -121,8 +114,7 @@ services:
         taskmanager.numberOfTaskSlots: 15
         parallelism.default: 3
     networks:
-      project_net:
-          ipv4_address: 172.23.0.13
+      - project_net
 
   postgres:
     image: postgres:14
@@ -139,8 +131,7 @@ services:
     ports:
       - "5433:5432"
     networks:
-      project_net:
-          ipv4_address: 172.23.0.14
+      - project_net
     extra_hosts:
      - "host.docker.internal:127.0.0.1" #// Linux
      - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
@@ -154,8 +145,7 @@ services:
     ports:
       - "8087:8080"
     networks:
-      project_net:
-          ipv4_address: 172.23.0.15
+      - project_net
     working_dir: /usr/app/dbt
     environment:
       - DBT_PROFILES_DIR=/usr/app/dbt
