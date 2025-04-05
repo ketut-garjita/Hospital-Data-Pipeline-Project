@@ -80,8 +80,7 @@ services:
       - "host.docker.internal:127.0.0.1" #// Linux
       - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
     environment:
-      #- POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://host.docker.internal:5433/postgres}
-      - POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://172.23.0.14:5432/postgres}
+      - POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://host.docker.internal:5433/postgres}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_DB=${POSTGRES_DB:-postgres}
