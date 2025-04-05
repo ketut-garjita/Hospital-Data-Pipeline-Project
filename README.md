@@ -197,7 +197,43 @@ terraform plan
 terraform apply
 ```
 
-**6. Change parameter of wal_level =  logical on postgresql.conf**
+**6. Edit ./dbt/profiles.yml**
+
+```
+hospital:
+  outputs:
+    dev:
+      dataset: hospital
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /usr/app/dbt/gcs.json
+      location: <region>
+      method: service-account
+      priority: interactive
+      project: <project-id>
+      threads: 4
+      type: bigquery
+  target: dev
+
+
+hospital_analytics:
+  outputs:
+    dev:
+      dataset: hospital
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /usr/app/dbt/gcs.json
+      location: <region>
+      method: service-account
+      priority: interactive
+      project: <project-id>
+      threads: 4
+      type: bigquery
+  target: dev
+```
+Entry project-id and region name.
+
+**7. Change parameter of wal_level =  logical on postgresql.conf**
 
 Copy ./src/postgresql.conf to project_postgres:/var/lib/postgresql/data/
 
@@ -206,13 +242,13 @@ docker cp ./src/postgresql.conf project_postgres:/var/lib/postgresql/data/postgr
 docker restart project_postgres
 ```
 
-**7. Initialize database**
+**8. Initialize database**
 
 ```
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
 ```
 
-**8. Setup Debezium**
+**9. Setup Debezium**
 ```
 # Setup connector for postgres schema tables:
 docker exec -it project_debezium bash -c "/opt/src/curl_postgres_connector.sh"
@@ -224,7 +260,7 @@ curl -X GET http://localhost:8083/connectors
 curl -X GET http://localhost:8083/connectors/postgres-source/status
 ```
 
-**9. Generate sample data for dimension and fact tables**
+**10. Generate sample data for dimension and fact tables**
 
 ```
 # via local server
@@ -232,7 +268,7 @@ pip install faker
 python ./src/generate_data_postgres.py
 ```
 
-**10. Check Redpanda Topics**
+**11. Check Redpanda Topics**
 ```
 docker exec -it project_redpanda bash
 ```
@@ -257,7 +293,7 @@ rpk topic consume postgres-source.public.visits
 ```
 Ctrl+C
 
-**11. Import flow files from repository to kestra**
+**12. Import flow files from repository to kestra**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_doctors.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_patients.yaml
@@ -273,7 +309,7 @@ Namespace: project
 
 <img width="328" alt="image" src="https://github.com/user-attachments/assets/f31a331e-d4d0-46ec-bb4f-df9a05d53b8e" />
 
-**12. Start streaming pipeline via Kestra GUI**
+**13. Start streaming pipeline via Kestra GUI**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
