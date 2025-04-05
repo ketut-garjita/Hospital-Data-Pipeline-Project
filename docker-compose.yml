@@ -122,7 +122,6 @@ services:
     restart: on-failure
     container_name: "project_postgres"
     volumes:
-      - ./src/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
       - ./src/create_tables.sql:/opt/src/create_tables.sql
       - ./src/generate_data_postgres.py:/opt/src/generate_data_postgres.py
     environment:
