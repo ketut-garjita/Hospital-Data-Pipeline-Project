@@ -1,0 +1,3 @@
+gcs.json
+*.json
+/credentials/
