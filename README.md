@@ -39,25 +39,25 @@ Schema tables Entity Relationship Diagram (ERD)
 - Dashboard (Visualization)
 
 ### Process
-**1. Data Generation & Collection:**
+**1. Data Generation & Collection**
 - Producing data into a Redpanda topic
 - A Python script generates synthetic hospital data
 - PostgreSQL serves as the operational database
 - Redpanda (Kafka-compatible) is used for streaming data
 
-**2. Stream Processing:**
+**2. Stream Processing**
 - Apache Flink for real-time data processing
 - Debezium for Change Data Capture (CDC) from PostgreSQL
 
-**3. Cloud Storage & Warehousing:**
+**3. Cloud Storage & Warehousing**
 - Google Cloud Storage (GCS) as data lake
 - BigQuery as data warehouse with external tables
 
-**4. Transformation & Modeling:**
+**4. Transformation & Modeling**
 - dbt for transforming raw data into analytical models
 - Structured in staging, intermediate, and mart layers
 
-**5. Orchestration & Visualization:**
+**5. Orchestration & Visualization**
 - Kestra for workflow orchestration
 - Looker for dashboards and business intelligence
 
@@ -118,7 +118,7 @@ Schema tables Entity Relationship Diagram (ERD)
 
 **Setup Instructions**
 
-**1. Clone the repository:**
+**1. Clone the repository**
 
 ```
 git clone https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project.git
@@ -128,7 +128,7 @@ cd Hospital-Data-Pipeline-Project
 **2. GCP Credentilas File**
 - Save gsc.json file in Hospital-Data-Pipeline-Project directory
 
-**3. Build and start containers:**
+**3. Build and start containers**
 
 ```
 docker compose up -d --build
@@ -156,7 +156,7 @@ docker restart kestra-kestra-1
 docker restart kestra-pgadmin-1
 ```
 
-**5. Initialize infrastructure:**
+**5. Initialize infrastructure**
 
 Ensure terraform has been installed.
 
@@ -172,7 +172,7 @@ terraform plan
 terraform apply
 ```
 
-**6. Initialize database:**
+**6. Initialize database**
 
 ```
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
@@ -198,7 +198,7 @@ pip install faker
 python ./src/generate_data_postgres.py
 ```
 
-**9. Check Redpanda Topic**
+**9. Check Redpanda Topics**
 ```
 rpk topic list
 ```
@@ -220,11 +220,11 @@ rpk topic consume postgres-source.public.visits
 Ctrl+C
 
 
-**14. Start streaming pipeline via Kestra GUI:**
+**14. Start streaming pipeline via Kestra GUI**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
-**Dimension Tables:**
+**Dimension Tables**
 
 - **dim_doctors**
   - This is for sending doctors json topic file to GCS
@@ -239,7 +239,7 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
   - This is for uploading dimension tables from GCS to BigQuery
   
 
-**Fact Tables:**
+**Fact Tables**
 
 - **streaming_producer**
   This is for start streaming data to Redpanda topic
@@ -254,7 +254,7 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
   - This is for uploading fact tables from GCS to BigQuery
 
 
-**dbt:**
+**dbt**
 
 - **dbt_run**
   - This is for running dbt to create data mart for analytics
