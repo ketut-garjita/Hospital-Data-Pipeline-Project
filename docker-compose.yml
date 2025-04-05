@@ -3,8 +3,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: "10.0.0.0/16"
-          gateway: "10.0.0.1"
+        - subnet: "172.23.0.0/16"
+          gateway: "172.23.0.1"
 
 services:
   redpanda-1:
@@ -40,7 +40,7 @@ services:
       - 29092:29092
     networks:
        project_net:
-          ipv4_address: 10.0.0.10
+          ipv4_address: 172.23.0.10
   connect:
     image: debezium/connect:2.3
     container_name: "project_debezium"
@@ -54,11 +54,11 @@ services:
       - BOOTSTRAP_SERVERS=project_redpanda:29092
     volumes:
       - ./pg-source.json:/kafka/config/pg-source.json
-      - ./src/curl_postgres_connector.sh:/opt/src
+      - ./src/curl_postgres_connector.sh:/opt/src/curl_postgres_connector.sh
       - ./src/flows:/opt/src/flows
     networks:
       project_net:
-          ipv4_address: 10.0.0.11
+          ipv4_address: 172.23.0.11
     depends_on:
       - redpanda-1
 
@@ -77,7 +77,7 @@ services:
       - "8081:8081"
     networks:
       project_net:
-          ipv4_address: 10.0.0.12
+          ipv4_address: 172.23.0.12
     volumes:
       - ./:/opt/flink/usrlib
       - ./keys/:/var/private/ssl/
@@ -87,8 +87,8 @@ services:
       - "host.docker.internal:127.0.0.1" #// Linux
       - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
     environment:
-      #- POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://host.docker.internal:5432/postgres}
-      - POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://10.0.0.14:5432/postgres}
+      #- POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://host.docker.internal:5433/postgres}
+      - POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://172.23.0.14:5432/postgres}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_DB=${POSTGRES_DB:-postgres}
@@ -122,7 +122,7 @@ services:
         parallelism.default: 3
     networks:
       project_net:
-          ipv4_address: 10.0.0.13
+          ipv4_address: 172.23.0.13
 
   postgres:
     image: postgres:14
@@ -140,7 +140,7 @@ services:
       - "5432:5432"
     networks:
       project_net:
-          ipv4_address: 10.0.0.14
+          ipv4_address: 172.23.0.14
     extra_hosts:
      - "host.docker.internal:127.0.0.1" #// Linux
      - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
@@ -155,7 +155,7 @@ services:
       - "8087:8080"
     networks:
       project_net:
-          ipv4_address: 10.0.0.15
+          ipv4_address: 172.23.0.15
     working_dir: /usr/app/dbt
     environment:
       - DBT_PROFILES_DIR=/usr/app/dbt
