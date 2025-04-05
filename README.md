@@ -135,6 +135,15 @@ docker compose up -d --build
 
 **4. Setup network connection for kestra and pgadmin**
 
+Check Kestra related containers
+```
+$ docker ps -a |grep kestra
+a92090a93684   kestra/kestra:latest                   "docker-entrypoint.s…"   3 days ago       Exited (137) 3 days ago                                                                                                                                                                                                                  kestra-kestra-1
+aa12c352d71e   postgres                               "docker-entrypoint.s…"   3 days ago       Exited (0) 3 days ago                                                                                                                                                                                                                    kestra-metadata-1
+57a9f773dd7a   dpage/pgadmin4                         "/entrypoint.sh"         7 days ago       Exited (0) 3 days ago                                                                                                                                                                                                                    kestra-pgadmin-1
+4d875986fef1   postgres                               "docker-entrypoint.s…"   7 days ago       Exited (0) 7 days ago                                                                                                                                                                                                                    kestra-postgres_zoomcamp-1
+```
+
 Kestra metadata container: **kestra-metadata-1**
 
 Kestra container: **kestra-kestra-1**
@@ -144,13 +153,13 @@ Pgadmin container: **kestra-pgadmin-1**
 Customize with your kestra and pgadmin container name.
 
 ```
-docker start kestra-metadata-1
+docker start kestra-metadata-1 
 docker start kestra-kestra-1
 docker start kestra-pgadmin-1
 docker network connect hospital-data-pipeline-project_project_net kestra-metadata-1
 docker network connect hospital-data-pipeline-project_project_net kestra-kestra-1
 docker network connect hospital-data-pipeline-project_project_net kestra-pgadmin-1
-docker restart kestra-metadata-1
+docker restart kestra-metadata-1 
 docker restart kestra-kestra-1
 docker restart kestra-pgadmin-1
 ```
