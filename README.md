@@ -1,20 +1,26 @@
 # Hospital Data Pipeline Project
 
 ## Objective
-This project aims to build an end-to-end data pipeline for hospital service analytics, implementing modern data engineering tools to process both batch and streaming data. The solution will provide insights into patient visits, doctor performance, medication usage, and billing information.
+This project aims to build an end-to-end data pipeline for hospital service analytics by implementing modern data engineering tools. The pipeline will process both streaming and batch data, enabling actionable insights into:
 
+- Patient visits,
+- Doctor performance,
+- Medication usage, and
+- Billing information.
+
+  
 ---
 ## Problem Statement
-Hospitals generate vast amounts of operational data that often sits in silos. This makes it difficult to:
+Hospitals generate vast amounts of operational data, but this data often remains siloed, making it difficult to:
 
-- Gain real-time insights into hospital operations
-- Analyze doctor performance and resource utilization
-- Monitor medication usage patterns
-- Generate accurate financial reports
+- Gain real-time insights into hospital operations,
+- Analyze doctor performance and resource utilization,
+- Monitor medication usage patterns, or
+- Generate accurate financial reports.
 
-Our solution integrates this data into a unified analytics platform with near real-time capabilities.
+Our solution integrates this dispersed data into a unified analytics platform with near real-time processing capabilities.
 
-Schema tables Entity Relationship Diagram (ERD)
+**Schema Tables & Entity Relationship Diagram (ERD)**:
 
 ![image](https://github.com/user-attachments/assets/9c82b2f7-37a2-496a-b773-4e9d01d565bc)
 
@@ -106,7 +112,7 @@ Schema tables Entity Relationship Diagram (ERD)
     - BigQuery Admin
     - BigQuery Data Viewer
     - Storage Admin
-- Json credentials file (rename to gcs.json)
+- Json credentials file (rename to gcs.json) and save on $HOME or ~ directory
 - Terraform installed (for GCP setup)
 - Kestra installed
 - Install Docker CLI (docker.io) from Ubuntu repositories on Kestra Container
