@@ -362,7 +362,8 @@ Monitor data transfer from topic to postgres using Apache Flink Dashboad.
 
 Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http://localhost:8080)
 
-![image](https://github.com/user-attachments/assets/92ea1226-7488-4f7a-9090-d69bd1377afc)
+![image](https://github.com/user-attachments/assets/5d097cfc-e159-4861-a61e-6b6ac69ec1e5)
+
 
 **dbt**
 - url: [http://localhost:8087](http://localhost:8087)
