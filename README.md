@@ -295,15 +295,15 @@ Ctrl+C
 
 **12. Import flow files from repository to kestra**
 ```
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_doctors.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_patients.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_medicines.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dim_gcs_to_bigquery.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/streaming_producer.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/flink_topic_to_postgres.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/redpanda_debezium_to_gcs.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/fact_gcs_to_bigquery.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/dbt_run.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/01_dim_doctors.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/02_dim_patients.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/03_dim_medicines.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/04_dim_gcs_to_bigquery.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/05_streaming_producer.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/06_flink_topic_to_postgres.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/07_redpanda_debezium_to_gcs.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/08_fact_gcs_to_bigquery.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/09_dbt_run.yaml
 ```
 Namespace: project
 
@@ -315,37 +315,37 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 
 **Dimension Tables**
 
-- **dim_doctors**
+- **01_dim_doctors**
   - This is for sending doctors json topic file to GCS
 
-- **dim_patients**
+- **02_dim_patients**
   - This is for sending patients json topic file to GCS
   
-- **dim_medicines**
+- **03_dim_medicines**
   - This is for sending medicines json topic file to GCS
 
-- **dim_gcs_to_bigquery**
+- **04_dim_gcs_to_bigquery**
   - This is for uploading dimension tables from GCS to BigQuery
   
 
 **Fact Tables**
 
-- **streaming_producer**
+- **05_streaming_producer**
   This is for start streaming data to Redpanda topic
 
-- **flink_topic_to_postgres**
+- **06_flink_topic_to_postgres**
   - This is for uploading topic data to PostgreSQL. Debezium will automatically sending data changes to Redpanda topic,
 
-- **redpanda_debezium_to_gcs**
+- **07_redpanda_debezium_to_gcs**
   - This is for sending json topic files to GCS
 
-- **fact_gcs_to_bigquery**
+- **08_fact_gcs_to_bigquery**
   - This is for uploading fact tables from GCS to BigQuery
 
 
 **dbt**
 
-- **dbt_run**
+- **09_dbt_run**
   - This is for running dbt to create data mart for analytics
 
 Monitor topic using rpk commamd
