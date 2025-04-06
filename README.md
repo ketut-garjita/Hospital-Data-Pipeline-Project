@@ -417,19 +417,31 @@ total-revenue-by-doctor
 ---
 ## Future Improvements
 
-1. Real-time Alerting:
-- Implement anomaly detection for unusual patient volumes
-- Medication interaction warnings
+1. Redpanda Optimization
+    - Performance Tuning
+        - Adjust batch_timeout_ms and batch_size_bytes to balance latency/throughput.
+        - Optimize retention policies (e.g., retention.ms for HIPAA compliance).
+        - Enable compression (zstd for high throughput, snappy for low latency).    
 
-2. Enhanced Data Quality:
-- Add Great Expectations for data validation
-- Implement data reconciliation checks
+2. Apache Flink Deep Dive
+    - Stream Processing:
+        - Upgrade to Flink 1.18+ for features like incremental checkpointing.
+        - Use KeyedCoProcessFunction for real-time alerts (e.g., drug interactions).
+        - Optimize windowing (e.g., session windows for patient activity tracking).
+    - State Management:
+        - RocksDBStateBackend with local SSDs for large state workloads.
+        - Enable incremental checkpoints and tune checkpointing.interval.
+    - Integration:
+        - Use Flink’s FileSink for streaming writes to GCS (Parquet/ORC format).
+        - Leverage Redpanda’s Kafka-compatible connector for low-latency ingestion.
 
-3. Advanced Analytics:
-- Predictive models for patient admission rates
-- Resource optimization suggestions
-
-4. Leverage Apache Flink more effectively for streaming data processing, particularly in cloud environments.
+3. Google Cloud Storage (GCS) for Streaming
+    - Cost Optimization:
+        - Auto-transition data to Nearline/Coldline via lifecycle policies.
+        - Partition data by timestamp (e.g., gs://bucket/patient_data/date=20240401/).
+    - Performance & Security:
+        - Use Flink’s GCS connector with Hadoop-like output formats.
+        - Enable CSEK (Customer-Supplied Encryption Keys) for sensitive data.
    
 
 ---
