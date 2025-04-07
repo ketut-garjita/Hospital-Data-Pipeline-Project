@@ -488,7 +488,7 @@ These scripts do not include stop and start of Kestra services.
 ---
 ## Future Improvements
 
-1. Apply to various real tables used by Hospitals in their operations. Some data tables are dimension tables, facts, and can be generated from batch or streaming.
+1. Apply to various real-world tables used by hospitals in their operations. The data tables include both dimension and fact tables, which can be generated through either batch or streaming processes.
    - Appointments
    - Medical Records
    - Insurance
