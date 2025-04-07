@@ -488,13 +488,22 @@ These scripts do not include stop and start of Kestra services.
 ---
 ## Future Improvements
 
-1. Redpanda Optimization
+1. Apply to various real tables used by Hospitals in their operations. Some data tables are dimension tables, facts, and can be generated from batch or streaming.
+   - Appointments
+   - Medical Records
+   - Insurance
+   - Laboratory Tests
+   - Hospital Rooms & Beds
+   - Emergency Cases 
+   - Staff
+   
+2. Redpanda Optimization
     - Performance Tuning
         - Adjust batch_timeout_ms and batch_size_bytes to balance latency/throughput.
         - Optimize retention policies (e.g., retention.ms for HIPAA compliance).
         - Enable compression (zstd for high throughput, snappy for low latency).    
 
-2. Apache Flink Deep Dive
+3. Apache Flink Deep Dive
     - Stream Processing:
         - Upgrade to Flink 1.18+ for features like incremental checkpointing.
         - Use KeyedCoProcessFunction for real-time alerts (e.g., drug interactions).
@@ -506,7 +515,7 @@ These scripts do not include stop and start of Kestra services.
         - Use Flink’s FileSink for streaming writes to GCS (Parquet/ORC format).
         - Leverage Redpanda’s Kafka-compatible connector for low-latency ingestion.
 
-3. Google Cloud Storage (GCS) for Streaming
+4. Google Cloud Storage (GCS) for Streaming
     - Cost Optimization:
         - Auto-transition data to Nearline/Coldline via lifecycle policies.
         - Partition data by timestamp (e.g., gs://bucket/patient_data/date=20240401/).
