@@ -112,7 +112,7 @@ Our solution integrates this dispersed data into a unified analytics platform wi
     - BigQuery Admin
     - BigQuery Data Viewer
     - Storage Admin
-- Json credentials file (rename to gcs.json) and save on $HOME or ~ directory
+- Json credentials file (rename to gcs.json) and save on your $HOME directory
 - Terraform installed (for GCP setup)
 - Kestra installed
 - Install Docker CLI (docker.io) from Ubuntu repositories on Kestra Container
@@ -130,31 +130,28 @@ git clone https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project.git
 cd Hospital-Data-Pipeline-Project
 ```
 
-**2. GCP Credentilas File**
-- Save your **gsc.json** file to Hospital-Data-Pipeline-Project/ directory
-
-**3. Build and start containers**
+**2. Build and start containers**
 
 ```
 docker compose up -d --build
 ```
 
-**4. Setup network connection for kestra and pgadmin**
+**3. Setup network connection for kestra and pgadmin**
 
 Check Kestra related containers
 ```
 $ docker ps -a |grep kestra
-a92090a93684   kestra/kestra:latest                   "docker-entrypoint.s…"   3 days ago       Exited (137) 3 days ago                                                                                                                                                                                                                  kestra-kestra-1
-aa12c352d71e   postgres                               "docker-entrypoint.s…"   3 days ago       Exited (0) 3 days ago                                                                                                                                                                                                                    kestra-metadata-1
-57a9f773dd7a   dpage/pgadmin4                         "/entrypoint.sh"         7 days ago       Exited (0) 3 days ago                                                                                                                                                                                                                    kestra-pgadmin-1
-4d875986fef1   postgres                               "docker-entrypoint.s…"   7 days ago       Exited (0) 7 days ago                                                                                                                                                                                                                    kestra-postgres_zoomcamp-1
+a92090a93684   kestra/kestra:latest   "docker-entrypoint.s…"   3 days ago       Exited (137) 3 days ago    kestra-kestra-1
+aa12c352d71e   postgres               "docker-entrypoint.s…"   3 days ago       Exited (0) 3 days ago      kestra-metadata-1     
+57a9f773dd7a   dpage/pgadmin4         "/entrypoint.sh"         7 days ago       Exited (0) 3 days ago      kestra-pgadmin-1
+4d875986fef1   postgres               "docker-entrypoint.s…"   7 days ago       Exited (0) 7 days ago      kestra-postgres_zoomcamp-1
 ```
 
-Kestra metadata container: **kestra-metadata-1**
+**kestra-metadata-1** --> Kestra metadata container
 
-Kestra container: **kestra-kestra-1**
+**kestra-kestra-1**   --> Kestra container
 
-Pgadmin container: **kestra-pgadmin-1**
+**kestra-pgadmin-1**  --> Pgadmin container
 
 Customize with your kestra and pgadmin container name.
 
@@ -170,7 +167,7 @@ docker restart kestra-kestra-1
 docker restart kestra-pgadmin-1
 ```
 
-**5. Initialize infrastructure**
+**4. Initialize infrastructure**
 
 Ensure terraform has been installed.
 
@@ -178,7 +175,7 @@ Edit terraform/main.tf file:
 
 ```
 provider "google" {
-  project = "your project
+  project = "your project"
   region  = "your region"
 }
 
@@ -203,7 +200,7 @@ terraform plan
 terraform apply
 ```
 
-**6. Edit ./dbt/profiles.yml**
+**5. Edit ./dbt/profiles.yml**
 
 ```
 hospital:
@@ -239,7 +236,9 @@ hospital_analytics:
 ```
 Entry project-id and region name.
 
-**7. Change parameter of wal_level =  logical on postgresql.conf**
+**6. Change wal_level parameter from replica to logical in postgresql.conf file**
+
+This modification enables logical decoding for transaction logs.
 
 Copy ./src/postgresql.conf to project_postgres:/var/lib/postgresql/data/
 
@@ -248,13 +247,13 @@ docker cp ./src/postgresql.conf project_postgres:/var/lib/postgresql/data/postgr
 docker restart project_postgres
 ```
 
-**8. Initialize database**
+**7. Create Postgres tables**
 
 ```
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
 ```
 
-**9. Setup Debezium**
+**8. Setup Debezium**
 ```
 # Setup connector for postgres schema tables:
 docker exec -it project_debezium bash -c "/opt/src/curl_postgres_connector.sh"
@@ -266,7 +265,7 @@ curl -X GET http://localhost:8083/connectors
 curl -X GET http://localhost:8083/connectors/postgres-source/status
 ```
 
-**10. Generate sample data for dimension and fact tables**
+**9. Generate sample data for dimension and fact tables**
 
 ```
 # via local server
@@ -274,7 +273,7 @@ pip install faker
 python ./src/generate_data_postgres.py
 ```
 
-**11. Check Redpanda Topics**
+**10. Check Redpanda Topics**
 ```
 docker exec -it project_redpanda bash
 ```
@@ -299,7 +298,7 @@ rpk topic consume postgres-source.public.visits
 ```
 Ctrl+C
 
-**12. Import flow files from repository to kestra**
+**11. Import flow files from repository to Kestra**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/01_dim_doctors.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/02_dim_patients.yaml
@@ -352,7 +351,7 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 **dbt**
 
 - **09_dbt_run**
-  - This is for running dbt to create data mart for analytics
+  - This is for debugging, running, generating, and serving documentation for dbt (data build tool) to create a data mart for analytics.
 
 Monitor topic using rpk commamd
 - rpk --help
