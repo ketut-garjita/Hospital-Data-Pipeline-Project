@@ -381,8 +381,6 @@ Monitor data transfer from topic to postgres using Apache Flink Dashboad.
 
 ![image](https://github.com/user-attachments/assets/45c8f478-dee8-4e79-9a75-2fd3ae8238f9)
 
-![image](https://github.com/user-attachments/assets/e1274c6d-18ac-402a-b121-210455cf4d81)
-
 
 **dbt**
 - url: [http://localhost:8087](http://localhost:8087)
