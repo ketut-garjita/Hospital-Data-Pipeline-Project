@@ -470,11 +470,14 @@ Pre-requisites:
   - [Visit Diagnosis Word Cloud](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_diagnosis_wordcloud.png)
 
 
-**NOTES**
+## Stop and Start the Docker Services for the Project
 
-Shell scripts:
-- Stopping all dockers: ./src/stop-dockers
-- Starting all dockers: ./src/start-dockers
+  Shell scripts:
+  - Stopping all dockers: ./src/stop-dockers
+  - Starting all dockers: ./src/start-dockers
+    
+These scripts do not include stop and start of Kestra services.
+
 
 ---
 ## Future Improvements
