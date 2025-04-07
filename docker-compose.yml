@@ -141,7 +141,6 @@ services:
     container_name: "project_dbt_runner"
     volumes:
       - ./dbt:/usr/app/dbt
-      - ./.dbt:/root/.dbt  # profiles.yml location
       - ${HOME}/gcs.json:/usr/app/dbt/gcs.json
     ports:
       - "8087:8080"
