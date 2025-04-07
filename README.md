@@ -387,8 +387,8 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 
 - Google Cloud Storage (Bucket)
 
-  ![image](https://github.com/user-attachments/assets/0faf5817-2071-43c7-aa08-d88f20b6c10f)
-  
+  ![image](https://github.com/user-attachments/assets/feb4fdbe-95c2-4a38-883a-4b525a241441)
+
 - BiqQuery Datasets
    
   ![image](https://github.com/user-attachments/assets/14493dfe-c841-4f49-8914-88091aa9433f)
