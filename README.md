@@ -451,7 +451,7 @@ Pre-requisites:
   ```
   python ./src/pipeline/pyspark_extract_upload_gcs.py
   ```  
-- Execute jupyter code for creating sample visualization
+- Execute jupyter notebook code for creating sample visualization
   
   Run [hospital_visualization_reports.ipynb](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/hospital_visualization_reports.ipynb) code through Jupyter Notebook
   ```
