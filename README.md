@@ -470,9 +470,7 @@ Pre-requisites:
   - [Visit Diagnosis Word Cloud](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_diagnosis_wordcloud.png)
 
 
-## Stop and Start Scripts the Docker Services for the Project
-hi
-  Shell scripts:
+## Scripts to Stop and Start the Docker Services for the Project
   - Stopping services: ./src/stop-dockers
   - Starting services: ./src/start-dockers
     
