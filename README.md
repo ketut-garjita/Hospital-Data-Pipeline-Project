@@ -258,7 +258,16 @@ docker restart project_postgres
 docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
 ```
 
-**8. Setup Debezium**
+**8. Setup Debezium Connector**
+
+A Debezium connector is a tool that captures changes in a database and streams them in real time. It's part of the Debezium platform, which is an open-source distributed platform for Change Data Capture (CDC).
+
+Debezium connectors connect to a source database (like MySQL, PostgreSQL, MongoDB, Oracle, SQL Server, etc.).
+
+They monitor the database’s transaction log to detect inserts, updates, and deletes.
+
+These changes are then published to the Kafka topic (or other message broker like Redpanda), allowing other systems to consume the real-time changes.
+
 ```
 # Setup connector for postgres schema tables:
 docker exec -it project_debezium bash -c "/opt/src/curl_postgres_connector.sh"
