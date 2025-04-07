@@ -313,11 +313,9 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flow
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/09_dbt_run.yaml
 ```
 
-**12. Login to Kestra UI**
+**12. Review flows list**
 
-Access Kestra UI at [http://localhost:8080](http://localhost:8080) 
-
-Review flows list:
+Login to Kestra UI at [http://localhost:8080](http://localhost:8080) 
 
 Flows --> Namespace --> filter --> project
 
@@ -402,17 +400,6 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 
   ![image](https://github.com/user-attachments/assets/7a8d326a-b69d-4cc0-99d4-83681832482c)
 
-**PySpark**
-
--  Extract data from Postgres and upload to GCS in json format files [here](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/pyspark_extract_upload_gcs.py)
--  [Sample visualization script and reports](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/hospital_visualization_reports.ipynb)
-   
-**NOTES**
-
-Shell scripts:
-- Stopping all dockers: ./src/stop-dockers
-- Starting all dockers: ./src/start-dockers
-
 
 ---
 ## Dashboard
@@ -444,6 +431,50 @@ total-revenue-by-doctor
 
 ![image](https://github.com/user-attachments/assets/e4dd3f12-54b2-4703-a149-bfd5bfd5ec9f)
 
+
+---
+## PySpark Batch Processing (optional)
+
+Pre-requisites:
+- Apache Spark installed on local server
+- Anaconda or Jupyter Notebook installed 
+- Downnload jars
+  ```
+  sudo mkdir /usr/lib/jars
+  cd /usr/lib//jars
+  sudo wget  https://jdbc.postgresql.org/download/postgresql-42.7.1.jar
+  sudo wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop3-latest.jar
+  ```
+- Extract data from Postgres and upload to GCS in json format file
+
+  Execute [pyspark_extract_upload_gcs.py](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/pyspark_extract_upload_gcs.py)
+  ```
+  python ./src/pipeline/pyspark_extract_upload_gcs.py
+  ```  
+- Execute jupyter code for creating sample visualization
+  
+  Run [hospital_visualization_reports.ipynb](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/hospital_visualization_reports.ipynb) code through Jupyter Notebook
+  ```
+  jupyter-notebook
+  Click :  http://localhost:8888/tree?token=xxxxxxx
+
+  Open and Run hospital_visualization_reports.ipynb
+  ```
+- Visualization Reports
+  - [Top 10 Doctors by Number of Visits](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_doctor_performance.png)
+  - [Monthly Revenue](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_monthly_revenue.png)
+  - [Patient Age Distribution](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_patient_age_distribution.png)
+  - [Payment Status Distribution](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_payment_status.png)
+  - [Prescription Medicine Analysis](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_top_medicines.png)
+  - [Doctor Specialization Distribution](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_doctor_specializations.png)
+  - [Visit Diagnosis Word Cloud](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/pyspark_diagnosis_wordcloud.png)
+
+
+**NOTES**
+
+Shell scripts:
+- Stopping all dockers: ./src/stop-dockers
+- Starting all dockers: ./src/start-dockers
 
 ---
 ## Future Improvements
