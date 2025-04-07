@@ -473,8 +473,8 @@ Pre-requisites:
 ## Stop and Start the Docker Services for the Project
 
   Shell scripts:
-  - Stopping all dockers: ./src/stop-dockers
-  - Starting all dockers: ./src/start-dockers
+  - Stopping services: ./src/stop-dockers
+  - Starting services: ./src/start-dockers
     
 These scripts do not include stop and start of Kestra services.
 
