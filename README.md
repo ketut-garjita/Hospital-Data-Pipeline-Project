@@ -35,7 +35,8 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 
 ![image](https://github.com/user-attachments/assets/3c62411d-06d2-420c-a941-12544feb81b0)
 
-<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="-759.25" y="402" width="1058.38" height="650" as="geometry"/></mxCell></root></mxGraphModel>
+![image](https://github.com/user-attachments/assets/738b5a3f-3631-4ee6-8fcf-e1e25d87f73c)
+
 
 ### Input
 - Postgres table creation and data initialization (dimension and fact tables) 
