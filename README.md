@@ -298,6 +298,8 @@ rpk topic consume postgres-source.public.visits
 ```
 Ctrl+C
 
+exit
+
 **11. Import flow files from repository to Kestra**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/01_dim_doctors.yaml
