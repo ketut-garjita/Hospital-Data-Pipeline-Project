@@ -312,7 +312,18 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flow
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/08_fact_gcs_to_bigquery.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/09_dbt_run.yaml
 ```
-Namespace: project
+
+**12. Login to Kestra UI**
+
+Access Kestra UI at [http://localhost:8080](http://localhost:8080) 
+
+Review flows list:
+
+Namespace --> filter --> project
+
+![image](https://github.com/user-attachments/assets/e724745b-be35-4370-8e66-90e702442acb)
+
+![image](https://github.com/user-attachments/assets/da350deb-f555-4127-bb22-dd7a6e49fc7f)
 
 <img width="328" alt="image" src="https://github.com/user-attachments/assets/f31a331e-d4d0-46ec-bb4f-df9a05d53b8e" />
 
