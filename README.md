@@ -33,6 +33,8 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 
 ![image](https://github.com/user-attachments/assets/7f109725-5adc-4474-a1dc-875a7d09de04)
 
+[https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/hospital_data_pipeline.png](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/hospital_data_pipeline.png)
+
 ### Input
 - Postgres table creation and data initialization (dimension and fact tables) 
 - Producer streaming data (continue running to redpanda topics)
