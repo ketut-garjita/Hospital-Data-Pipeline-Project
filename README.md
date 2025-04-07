@@ -35,7 +35,8 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 
 ![image](https://github.com/user-attachments/assets/3c62411d-06d2-420c-a941-12544feb81b0)
 
-![image](https://github.com/user-attachments/assets/738b5a3f-3631-4ee6-8fcf-e1e25d87f73c)
+![image](https://github.com/user-attachments/assets/e5748f8b-fa7d-4e9e-9464-4323634d8fd7)
+
 
 
 ### Input
