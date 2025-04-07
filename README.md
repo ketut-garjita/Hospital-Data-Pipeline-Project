@@ -452,8 +452,14 @@ Pre-requisites:
   Execute [pyspark_extract_upload_gcs.py](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/pyspark_extract_upload_gcs.py)
   ```
   python ./src/pipeline/pyspark_extract_upload_gcs.py
-  ```  
+  ```
+- PySpark GCS files
+
+  ![image](https://github.com/user-attachments/assets/3b0496aa-a4dc-463f-8c31-d613f85c207d)
+
 - Execute jupyter notebook code for creating sample visualization
+
+  Input datasets: pyspark GCS files
   
   Run [hospital_visualization_reports.ipynb](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/hospital_visualization_reports.ipynb) code through Jupyter Notebook
   ```
