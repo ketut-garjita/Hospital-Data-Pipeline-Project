@@ -236,7 +236,7 @@ hospital_analytics:
       type: bigquery
   target: dev
 ```
-Entry project-id and region name.
+Entry your project-id and region name.
 
 **6. Change wal_level parameter from replica to logical in postgresql.conf file**
 
