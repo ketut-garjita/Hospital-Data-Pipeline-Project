@@ -396,7 +396,7 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
   ![image](https://github.com/user-attachments/assets/15553ba4-ff8f-41d9-8a95-ccd5e905594d)
 
 - **dbt**
-- url: [http://localhost:8087](http://localhost:8087)
+  url: [http://localhost:8087](http://localhost:8087)
 
   ![image](https://github.com/user-attachments/assets/6eeb8f45-b458-4620-9686-b6c9fe50cf85)
 
