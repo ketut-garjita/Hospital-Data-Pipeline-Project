@@ -319,13 +319,12 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080)
 
 Review flows list:
 
-Namespace --> filter --> project
+Flows --> Namespace --> filter --> project
 
 ![image](https://github.com/user-attachments/assets/e724745b-be35-4370-8e66-90e702442acb)
 
 ![image](https://github.com/user-attachments/assets/da350deb-f555-4127-bb22-dd7a6e49fc7f)
 
-<img width="328" alt="image" src="https://github.com/user-attachments/assets/f31a331e-d4d0-46ec-bb4f-df9a05d53b8e" />
 
 **13. Start streaming pipeline via Kestra GUI**
 
@@ -372,15 +371,17 @@ Monitor topic using rpk commamd
 - rpk topic consume
 - etc.
   
+Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http://localhost:8080)
+
+![image](https://github.com/user-attachments/assets/8d5f0eba-972d-4a81-8aed-85365de79dd2)
+
 Monitor data transfer from topic to postgres using Apache Flink Dashboad.
 
 [http://localhost:8081](http://localhost:8081)
 
+![image](https://github.com/user-attachments/assets/45c8f478-dee8-4e79-9a75-2fd3ae8238f9)
+
 ![image](https://github.com/user-attachments/assets/e1274c6d-18ac-402a-b121-210455cf4d81)
-
-Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http://localhost:8080)
-
-![image](https://github.com/user-attachments/assets/5d097cfc-e159-4861-a61e-6b6ac69ec1e5)
 
 
 **dbt**
