@@ -363,26 +363,35 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 **dbt**
 
 - **09_dbt_run**
-  - This is for debugging, running, generating, and serving documentation for dbt (data build tool) to create a data mart for analytics.
+  - This is for debugging, running, generating, and serving documents for dbt (data build tool) to create a data mart for analytics.
 
-Monitor topic using rpk commamd
-- rpk --help
-- rpk topic list
-- rpk topic consume
-- etc.
+**14. Monitoring**
+
+- Monitor topic using rpk commamd
+  - rpk --help
+  - rpk topic list
+  - rpk topic consume
+  - etc.
   
-Monitor executions of flows pipeline on Kestra UI: [http://localhost:8080](http://localhost:8080)
+- Monitor executions of flows pipeline on Kestra UI
 
-![image](https://github.com/user-attachments/assets/8d5f0eba-972d-4a81-8aed-85365de79dd2)
+  [http://localhost:8080](http://localhost:8080)
 
-Monitor data transfer from topic to postgres using Apache Flink Dashboad.
+  ![image](https://github.com/user-attachments/assets/8d5f0eba-972d-4a81-8aed-85365de79dd2)
 
-[http://localhost:8081](http://localhost:8081)
+- Monitor data transfer from topic to postgres using Apache Flink Dashboad
 
-![image](https://github.com/user-attachments/assets/45c8f478-dee8-4e79-9a75-2fd3ae8238f9)
+  [http://localhost:8081](http://localhost:8081)
 
+  ![image](https://github.com/user-attachments/assets/45c8f478-dee8-4e79-9a75-2fd3ae8238f9)
 
-**dbt**
+- Google Cloud Storage (Bucket)
+
+  ![image](https://github.com/user-attachments/assets/14493dfe-c841-4f49-8914-88091aa9433f)
+
+  ![image](https://github.com/user-attachments/assets/15553ba4-ff8f-41d9-8a95-ccd5e905594d)
+
+- **dbt**
 - url: [http://localhost:8087](http://localhost:8087)
 
   ![image](https://github.com/user-attachments/assets/6eeb8f45-b458-4620-9686-b6c9fe50cf85)
