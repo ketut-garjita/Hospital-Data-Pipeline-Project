@@ -140,6 +140,9 @@ docker compose up -d --build
 
 **3. Setup network connection for kestra and pgadmin**
 
+Network name of project docker containers is **hospital-data-pipeline-project_project_net**.
+All containers should connect to the same network.
+
 Check Kestra related containers
 ```
 $ docker ps -a |grep kestra
