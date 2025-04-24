@@ -290,9 +290,12 @@ curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
 
 **9. Generate sample data for dimension and fact tables**
 
+On local server:
+
 ```
-# via local server
 pip install faker
+```
+```
 python ./src/generate_data_postgres.py
 ```
 
