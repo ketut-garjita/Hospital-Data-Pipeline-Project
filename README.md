@@ -459,6 +459,7 @@ Pre-requisites:
   Input datasets: [pyspark GCS files](https://github.com/user-attachments/assets/3b0496aa-a4dc-463f-8c31-d613f85c207d)
   
   Run [hospital_visualization_reports.ipynb](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/hospital_visualization_reports.ipynb) code through Jupyter Notebook
+  
   ```
   jupyter-notebook
   Click :  http://localhost:8888/tree?token=xxxxxxx
@@ -502,7 +503,6 @@ These scripts do not include stop and start of Kestra services.
 
 3. Apache Flink Deep Dive
     - Stream Processing:
-        - Upgrade to Flink 1.18+ for features like incremental checkpointing.
         - Use KeyedCoProcessFunction for real-time alerts (e.g., drug interactions).
         - Optimize windowing (e.g., session windows for patient activity tracking).
     - State Management:
@@ -524,13 +524,14 @@ These scripts do not include stop and start of Kestra services.
 ---
 ## Acknowledgments
 
-- Redpanda team for developing the Kafka-compatible streaming platform.
-- dbt Labs for creating the transformation framework.
-- Apache Foundation for providing Flink and Spark.
-- Google Cloud for offering a robust data warehousing platform.
-- Debezium community for developing the CDC solution.
-- Python Software Foundation, which has produced a very efficient programming language.
-- SQL, as a powerful language for data manipulation.
-- Terraform for enabling GCP resource provisioning.
-- DataTalksClub Community, which is truly a great learning platform.
+- Redpanda — for developing a Kafka-compatible, high-performance streaming platform.
+- dbt Labs — for creating a powerful transformation framework that simplifies data modeling.
+- The Apache Software Foundation — for contributing essential open-source tools like Flink and Spark.
+- Google Cloud Platform (GCP) — for providing a reliable and scalable data warehousing infrastructure.
+- Debezium Community — for building an open-source Change Data Capture (CDC) solution.
+- Python Software Foundation — for developing Python, a versatile and efficient programming language.
+- SQL — as a foundational language for querying and manipulating structured data.
+- Terraform — for enabling Infrastructure as Code (IaC) and seamless provisioning of GCP resources.
+- ClickHouse, DuckDB, and Grafana — for enabling fast analytics, in-memory processing, and intuitive data visualization.
+- DataTalks.Club Community — for fostering a vibrant and collaborative learning environment in data engineering and analytics.
 
