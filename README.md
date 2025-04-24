@@ -341,7 +341,7 @@ Flows --> Namespace --> filter --> project
 
 ![image](https://github.com/user-attachments/assets/e724745b-be35-4370-8e66-90e702442acb)
 
-![image](https://github.com/user-attachments/assets/da350deb-f555-4127-bb22-dd7a6e49fc7f)
+![image](https://github.com/user-attachments/assets/9a7940b2-d0b6-4fe5-b43a-6267d0a4eb59)
 
 
 **13. Start streaming pipeline via Kestra GUI**
@@ -364,8 +364,6 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 - Monitor executions of flows pipeline on Kestra UI
 
   [http://localhost:8080](http://localhost:8080)
-
-  [images/project-kestra-executions.png](https://github.com/ketut-garjita/streaming-project-1/blob/main/images/project-kestra-executions.png)
 
   ![image](https://github.com/user-attachments/assets/857b0acf-5572-4cf7-941d-937cee06a98f)
 
