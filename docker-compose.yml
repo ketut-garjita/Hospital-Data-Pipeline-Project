@@ -368,3 +368,16 @@ services:
       - clickhouse
     command: ["tail", "-f", "/dev/null"]
     restart: unless-stopped
+
+  
+  # GRAFANA
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_INSTALL_PLUGINS=vertamedia-clickhouse-datasource
+

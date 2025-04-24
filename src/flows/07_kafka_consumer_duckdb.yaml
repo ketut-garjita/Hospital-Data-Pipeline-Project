@@ -1,0 +1,20 @@
+id: 07_kafka_consumer_duckdb
+namespace: project
+
+tasks:
+  - id: start_kafka_consumer_duckdb
+    description: pre-requisite --> close duckDB connection
+    type: io.kestra.core.tasks.scripts.Bash
+    commands:
+      - nohup docker exec project_olap_consumer bash -c "python /app/olap/duckdb/kafka_consumer_duckdb.py" > /dev/null 2>&1 &
+ 
+  - id: wait_runtime
+    type: io.kestra.plugin.core.flow.Sleep
+    description: Wait for the specified duration
+    duration: "PT60M"
+
+  - id: stop_kafka_consumer_duckdb
+    type: io.kestra.core.tasks.scripts.Bash
+    description: Stop the running Kafka data generator
+    commands:
+      - docker exec project_olap_consumer pkill -f /app/olap/duckdb/kafka_consumer_duckdb.py

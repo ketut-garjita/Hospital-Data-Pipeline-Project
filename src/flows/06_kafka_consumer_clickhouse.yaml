@@ -1,0 +1,19 @@
+id: 06_kafka_consumer_clickhouse
+namespace: project
+
+tasks:
+  - id: start_kafka_consumer_clickhouse
+    type: io.kestra.core.tasks.scripts.Bash
+    commands:
+      - nohup docker exec project_olap_consumer bash -c "python /app/olap/clickhouse/kafka_consumer_clickhouse.py" > /dev/null 2>&1 &
+ 
+  - id: wait_runtime
+    type: io.kestra.plugin.core.flow.Sleep
+    description: Wait for the specified duration
+    duration: "PT60M"
+
+  - id: stop_kafka_consumer_clickhouse
+    type: io.kestra.core.tasks.scripts.Bash
+    description: Stop the running Kafka data generator
+    commands:
+      - docker exec project_olap_consumer pkill -f /app/olap/clickhouse/kafka_consumer_clickhouse.py

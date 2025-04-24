@@ -1,4 +1,4 @@
-Id: 05_dbt_run
+id: 05_dbt_run
 namespace: project
 
 tasks:
@@ -6,5 +6,3 @@ tasks:
     type: io.kestra.core.tasks.scripts.Bash
     commands:
       - docker exec -e GOOGLE_APPLICATION_CREDENTIALS="/usr/app/dbt/gcs.json" project_dbt_runner bash -c "dbt debug && dbt run && dbt docs generate && dbt docs serve --port 8080 --host 0.0.0.0"
-      
-      
