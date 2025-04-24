@@ -2,7 +2,7 @@
 
 SELECT
   doctor_id,
-  doctor_name,
+  name AS doctor_name,
   specialization,
   experience_years,
   contact_info,
