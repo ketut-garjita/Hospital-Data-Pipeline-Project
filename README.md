@@ -31,9 +31,9 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 ## Data Pipeline Architecture
 **Hospital Data Pipeline**
 
-![image](https://github.com/user-attachments/assets/7f109725-5adc-4474-a1dc-875a7d09de04)
+![image](https://github.com/user-attachments/assets/9a170051-3fa1-4ad5-87b1-d009ef551b7c)
 
-[https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/hospital_data_pipeline.png](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/hospital_data_pipeline.png)
+[Hospital Data Pipeline](https://github.com/ketut-garjita/streaming-project-1/blob/main/images/project-hospital-data-pipeline.svg)
 
 ### Input
 - Postgres table creation and data initialization (dimension and fact tables) 
