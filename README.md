@@ -285,7 +285,7 @@ curl -X GET http://localhost:8183/connectors
 
 # Check connection status:
 curl -X GET http://localhost:8083/connectors/postgres-source/status
-curl -X GET http://localhost:8083/connectors/postgres-debezium-gcs/status
+curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
 ```
 
 **9. Generate sample data for dimension and fact tables**
@@ -347,7 +347,7 @@ Flows --> Namespace --> filter --> project
 
 **13. Start streaming pipeline via Kestra GUI**
 
-Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
+Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows:
 
 ```
 01_streaming_producer.yaml
@@ -357,6 +357,8 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 05_dbt_run.yaml
 06_kafka_consumer_clickhouse.yaml
 07_kafka_consumer_duckdb.yaml
+
+Note: 05_dbt_run.yaml can be run last
 ```
 
 ---
