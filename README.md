@@ -33,8 +33,6 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 
 ![image](https://github.com/user-attachments/assets/012a2864-d878-4b99-bdb7-5252b67aeb9b)
 
-![17454859122377692567730624389131](https://github.com/user-attachments/assets/acc864e6-f2b3-45b4-9a84-541b33a1bc3e)
-
 [Hospital Data Pipeline](https://github.com/ketut-garjita/streaming-project-1/blob/main/images/project-hospital-data-pipeline.svg)
 
 ### Input
