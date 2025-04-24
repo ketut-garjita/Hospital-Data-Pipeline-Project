@@ -127,7 +127,7 @@ Our solution integrates this dispersed data into a unified analytics platform wi
     ```
     apt-get update && apt-get install -y docker.io
     ```
-- pgAmin, Dbeaver
+- pgAdmin, Dbeaver
    
 ---
 **Setup Instructions**
