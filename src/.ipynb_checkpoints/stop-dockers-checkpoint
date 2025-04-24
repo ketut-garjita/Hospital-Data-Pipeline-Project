@@ -1,0 +1,7 @@
+docker stop \
+project_redpanda \
+project_debezium \
+project_flink_taskmanager \
+project_flink_jobmanager \
+project_dbt_runner \
+project_postgres

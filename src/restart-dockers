@@ -1,0 +1,12 @@
+docker restart \
+project_postgres \
+project_redpanda \
+project_debezium \
+project_kafka_connect \
+project_connect_ui \
+project_flink_taskmanager \
+project_flink_jobmanager \
+project_dbt_runner \
+project_clickhouse \
+project_olap_consumer
+~                       

@@ -1,0 +1,7 @@
+id: 02_flink_topic_to_postgres
+namespace: project
+tasks:
+  - id: flink_topic_to_postgres
+    type: io.kestra.core.tasks.scripts.Bash
+    commands:
+      - docker exec project_flink_jobmanager bash -c "flink run -py /opt/src/pipeline/flink_topic_to_postgres.py -d"

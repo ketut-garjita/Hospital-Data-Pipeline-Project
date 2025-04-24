@@ -1,0 +1,7 @@
+id: 01_streaming_producer
+namespace: project
+tasks:
+  - id: streaming-producer
+    type: io.kestra.core.tasks.scripts.Bash
+    commands:
+      - docker exec project_flink_jobmanager bash -c "python /opt/src/pipeline/streaming_producer.py"

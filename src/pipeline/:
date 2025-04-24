@@ -1,0 +1,57 @@
+import psycopg2
+from faker import Faker
+import random
+from datetime import datetime, timedelta
+
+conn = psycopg2.connect("host=project_postgres dbname=hospital user=postgres password=postgres")
+cur = conn.cursor()
+faker = Faker()
+
+for _ in range(10):
+    cur.execute(
+        "INSERT INTO doctors (name, specialization, experience_years, contact_info) VALUES (%s, %s, %s, %s)",
+        (faker.name(), random.choice(["Cardiology", "Neurology", "Orthopedics", "Pediatrics"]), random.randint(5, 30), faker.phone_number())
+    )
+
+for _ in range(100):
+    cur.execute(
+        "INSERT INTO patients (full_name, date_of_birth, gender, blood_type, contact_info, insurance_id) VALUES (%s, %s, %s, %s, %s, %s)",
+        (faker.name(), faker.date_of_birth(minimum_age=1, maximum_age=90), random.choice(["Male", "Female"]), random.choice(["A", "B", "AB", "O"]),
+         faker.phone_number(), faker.bothify(text='INS####'))
+    )
+
+sleep 10
+
+for _ in range(50):
+    cur.execute(
+        "INSERT INTO visits (patient_id, doctor_id, visit_date, diagnosis, total_cost) VALUES (%s, %s, %s, %s, %s)",
+        (random.randint(1, 100), random.randint(1, 10), faker.date_between(start_date="-1y", end_date="today"),
+         faker.sentence(), round(random.uniform(50, 500), 2))
+    )
+
+for _ in range(15):
+    cur.execute(
+        "INSERT INTO medicines (name, category, manufacturer, price) VALUES (%s, %s, %s, %s)",
+        (faker.word(), random.choice(["Antibiotic", "Painkiller", "Antidepressant", "Antiviral"]), faker.company(),
+         round(random.uniform(5, 100), 2))
+    )
+
+for _ in range(30):
+    cur.execute(
+        "INSERT INTO prescriptions (patient_id, doctor_id, medicine_id, dosage, duration) VALUES (%s, %s, %s, %s, %s)",
+        (random.randint(1, 100), random.randint(1, 10), random.randint(1, 15), f"{random.randint(1, 3)} pills", f"{random.randint(3, 14)} days")
+    )
+
+for _ in range(40):
+    cur.execute(
+        "INSERT INTO billing_payments (patient_id, visit_id, billing_date, total_amount, payment_status) VALUES (%s, %s, %s, %s, %s)",
+        (random.randint(1, 100), random.randint(1, 50), faker.date_between(start_date="-1y", end_date="today"),
+         round(random.uniform(50, 500), 2), random.choice(["Paid", "Unpaid", "Pending"]))
+    )
+
+# Commit dan tutup koneksi
+conn.commit()
+cur.close()
+conn.close()
+print("Data inserted successfully!")
+

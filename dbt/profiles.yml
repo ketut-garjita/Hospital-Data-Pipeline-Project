@@ -1,0 +1,30 @@
+hospital:
+  outputs:
+    dev:
+      dataset: hospital
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /usr/app/dbt/gcs.json
+      location: asia-southeast2
+      method: service-account
+      priority: interactive
+      project: dataeng-2025-gar
+      threads: 4
+      type: bigquery
+  target: dev
+
+
+hospital_analytics:
+  outputs:
+    dev:
+      dataset: hospital
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /usr/app/dbt/gcs.json
+      location: asia-southeast2
+      method: service-account
+      priority: interactive
+      project: dataeng-2025-gar
+      threads: 4
+      type: bigquery
+  target: dev

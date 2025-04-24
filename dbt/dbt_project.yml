@@ -1,0 +1,34 @@
+name: 'hospital_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'hospital_analytics'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+
+vars:
+  hospital_schema: 'hospital'  # Nama schema source di BigQuery
+
+sources:
+  hospital_analytics:
+    staging:
+      +schema: staging
+
+models:
+  hospital_analytics:
+    staging:
+      +schema: staging
+      base:
+        +schema: staging
+        +materialized: view
+      refined:
+        +schema: staging
+        +materialized: table
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: analytics

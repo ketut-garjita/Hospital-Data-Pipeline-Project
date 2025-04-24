@@ -1,0 +1,19 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install some Linux packages 
+RUN apt-get update && apt-get install -y curl wget tree vim telnet apt procps
+
+# Install duckdb 
+RUN curl https://install.duckdb.org | sh
+
+# Install dependencies only 
+RUN pip install --no-cache-dir \
+    confluent-kafka \
+    clickhouse-connect \
+    duckdb
+
+CMD ["tail", "-f", "/dev/null"]
+
+

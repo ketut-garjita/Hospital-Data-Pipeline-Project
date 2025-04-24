@@ -1,0 +1,45 @@
+FROM flink:1.18.0-scala_2.12-java11
+
+LABEL maintainer="yourname@example.com"
+
+# Set environment variables
+ENV PYTHON_VERSION=3.9.18
+ENV PYFLINK_PYTHON=/usr/local/bin/python3
+
+# Install system dependencies and Python 3.9
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        wget curl build-essential libssl-dev zlib1g-dev \
+        libbz2-dev libreadline-dev libsqlite3-dev \
+        libffi-dev liblzma-dev python3-pip python3-dev python3.9 python3.9-dev python3.9-distutils ca-certificates gnupg && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 && \
+    openjdk-11-jdk  && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install pip packages from requirements.txt
+COPY requirements.txt .
+RUN python -m pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements-flink.txt
+
+# Download necessary JARs (Kafka, GCS, BigQuery, JDBC, JSON format)
+RUN mkdir -p /opt/flink/plugins/flink-gs-fs-hadoop && \
+    wget -q -P /opt/flink/lib/ \
+        https://repo.maven.apache.org/maven2/org/apache/flink/flink-json/1.18.0/flink-json-1.18.0.jar \
+        https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.2.0-1.18/flink-sql-connector-kafka-3.2.0-1.18.jar \
+        https://repo.maven.apache.org/maven2/org/apache/flink/flink-connector-jdbc/3.2.0-1.18/flink-connector-jdbc-3.2.0-1.18.jar \
+        https://repo.maven.apache.org/maven2/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar && \
+    wget -q -P /opt/flink/plugins/flink-gs-fs-hadoop/ \
+        https://repo.maven.apache.org/maven2/com/google/cloud/bigdataoss/gcs-connector/hadoop3-2.2.11/gcs-connector-hadoop3-2.2.11.jar
+
+# Enable checkpointing and GCS support
+RUN echo "execution.checkpointing.interval: 10s" >> /opt/flink/conf/flink-conf.yaml && \
+    echo "execution.checkpointing.mode: EXACTLY_ONCE" >> /opt/flink/conf/flink-conf.yaml && \
+    echo "state.backend: filesystem" >> /opt/flink/conf/flink-conf.yaml && \
+    echo "state.checkpoints.dir: file:///opt/flink/checkpoints" >> /opt/flink/conf/flink-conf.yaml
+
+WORKDIR /opt/flink
+

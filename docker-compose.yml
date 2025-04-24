@@ -1,0 +1,370 @@
+networks:
+  project_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redpanda_data:
+  vol-pgdata:
+    name: vol-pgdata
+  vol-pgadmin_data:
+    name: vol-pgadmin_data
+  vol-kestra-metadata:
+    name: vol-kestra-metadata
+  vol-kestra-data:
+    name: vol-kestra-data
+  clickhouse_data:
+
+services:
+
+  # ===> POSTGRES <<===
+  postgres:
+    image: postgres:14
+    restart: on-failure
+    container_name: "project_postgres"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./etc/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./etc/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./src:/opt/src
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    environment:
+      - POSTGRES_DB=hospital
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - project_net
+    extra_hosts:
+     - "host.docker.internal:127.0.0.1" #// Linux
+     - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
+
+
+  # ===>> REDPANDA <<===
+  redpanda-1:
+    image: redpandadata/redpanda:v25.1.1
+    container_name: "project_redpanda"
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    ports:
+      - 8082:8082
+      - 9092:9092
+      - 28082:28082
+      - 29092:29092
+    networks:
+      - project_net
+    command:
+      - redpanda
+      - start
+      - --smp
+      - '1'
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --node-id
+      - '1'
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://project_redpanda:29092,OUTSIDE://localhost:9092
+      - --pandaproxy-addr
+      - PLAINTEXT://0.0.0.0:28082,OUTSIDE://0.0.0.0:8082
+      - --advertise-pandaproxy-addr
+      - PLAINTEXT://project_redpanda:28082,OUTSIDE://localhost:8082
+      - --rpc-addr
+      - 0.0.0.0:33145
+      - --advertise-rpc-addr
+      - project_redpanda:33145
+
+
+  # ===> DEBEZIUM <<==
+  connect:
+    image: debezium/connect:3.0.0.Final
+    container_name: "project_debezium"
+    ports:
+      - "8083:8083"
+    environment:
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=connect_configs
+      - OFFSET_STORAGE_TOPIC=connect_offsets
+      - STATUS_STORAGE_TOPIC=connect_statuses
+      - BOOTSTRAP_SERVERS=project_redpanda:29092
+    volumes:
+      - ./pg-source.json:/kafka/config/pg-source.json
+      - ./src/curl_postgres_connector.sh:/opt/src/curl_postgres_connector.sh
+      - ./src/flows:/opt/src/flows
+    networks:
+      - project_net
+    depends_on:
+      - redpanda-1
+
+
+  # ===>> AKHQ <<===
+  # Kafka topic monitoring tool 
+  kafka-connect-ui:
+    image: tchiotludo/akhq
+    container_name: "project_connect_ui"
+    ports:
+      - "8180:8080"
+    depends_on:
+      - redpanda-1
+    environment:
+      MICRONAUT_SECURITY_ENABLED: "true"
+      MICRONAUT_SECURITY_TOKEN_JWT_ENABLED: "true"
+      MICRONAUT_SECURITY_TOKEN_JWT_SIGNATURES_SECRET_GENERATOR_SECRET: "my-super-secret"
+      MICRONAUT_SECURITY_BASIC_AUTH_USERS_0_USERNAME: "admin"
+      MICRONAUT_SECURITY_BASIC_AUTH_USERS_0_PASSWORD: "admin123"
+      MICRONAUT_SECURITY_BASIC_AUTH_USERS_0_ROLES_0: "admin"
+      AKHQ_CONFIGURATION: |
+        akhq:
+          server:
+            servlet:
+              context-path: /
+          connections:
+            redpanda:
+              properties:
+                bootstrap.servers: "project_redpanda:29092"
+          security:
+            default-group: admin
+    networks:
+      - project_net
+
+
+  # ===>> KAFKA-CONNECT <<===
+  kafka-connect:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.kafka-connect
+    container_name: "project_kafka_connect"
+    ports:
+      - "8183:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "project_redpanda:29092"
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'kafka-connect'
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: kafka-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: _kafka_connect_configs
+      CONNECT_OFFSET_STORAGE_TOPIC: _kafka_connect_offsets
+      CONNECT_STATUS_STORAGE_TOPIC: _kafka_connect_statuses
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_PLUGIN_PATH: /usr/share/confluent-hub-components,/usr/share/java,/etc/kafka-connect/jars,/etc/kafka-connect/connectors
+      GCS_CREDENTIALS_PATH: /etc/kafka-connect/secrets/gcs.json
+    volumes:
+      - $HOME/gcs.json:/etc/kafka-connect/secrets/gcs.json
+      - ./connectors:/etc/kafka-connect/connectors
+      - ./plugins:/etc/kafka-connect/jars
+      - ./config/connect-distributed.properties:/etc/kafka/connect-distributed.properties
+    command: [
+      "bash", "-c",
+      "/usr/bin/connect-distributed /etc/kafka/connect-distributed.properties"
+    ]
+    networks:
+      - project_net
+
+
+  # ===> APACHE FLINK <<===
+  jobmanager:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.flink
+    container_name: "project_flink_jobmanager"
+    pull_policy: never
+    platform: "linux/amd64"
+    hostname: "jobmanager"
+    expose:
+      - "6123"
+    ports:
+      - "8081:8081"
+    networks:
+      - project_net
+    volumes:
+      - ./:/opt/flink/usrlib
+      - ./keys/:/var/private/ssl/
+      - ./src/:/opt/src
+      - ${HOME}/gcs.json:/opt/src/pipeline/gcs.json
+    command: jobmanager 
+    extra_hosts:
+      - "host.docker.internal:127.0.0.1" #// Linux
+      - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
+    environment:
+      - POSTGRES_URL=${POSTGRES_URL:-jdbc:postgresql://host.docker.internal:5433/postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager        
+  
+  # Flink task manager
+  taskmanager:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.flink
+    container_name: "project_flink_taskmanager"
+    pull_policy: never
+    platform: "linux/amd64"
+    expose:
+      - "6121"
+      - "6122"
+    volumes:
+      - ./:/opt/flink/usrlib
+      - ./src/:/opt/src
+      - ${HOME}/gcs.json:/opt/src/pipeline/gcs.json
+    depends_on:
+      - jobmanager
+    command: taskmanager --taskmanager.registration.timeout 5 min 
+    extra_hosts:
+      - "host.docker.internal:127.0.0.1" #// Linux
+      - "host.docker.internal:host-gateway" #// Access services on the host machine from within the Docker container
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 15
+        parallelism.default: 3
+    networks:
+      - project_net
+
+
+  # ===> DBT <<===
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-bigquery:latest
+    container_name: "project_dbt_runner"
+    volumes:
+      - ./dbt:/usr/app/dbt
+      - ${HOME}/gcs.json:/usr/app/dbt/gcs.json
+    ports:
+      - "8087:8080"
+    networks:
+      - project_net
+    working_dir: /usr/app/dbt
+    environment:
+      - DBT_PROFILES_DIR=/usr/app/dbt
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+
+
+  # ===>> KESTRA <<===
+  kestra-metadata:
+    image: postgres:17-alpine
+    container_name: kestra-metadata-1
+    volumes:
+      - vol-kestra-metadata:/var/lib/postgresql/data
+    networks:
+      - project_net
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: k3str4
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 30s
+      retries: 10
+
+  kestra:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.kestra
+    container_name: kestra-kestra-1    
+    pull_policy: always
+    user: "root"
+    command: server standalone
+    volumes:
+      - vol-kestra-data:/app/storage
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $HOME/gcs.json:/root/.config/gcloud/gcs.json #mount GCS credential
+      - .:/app/project #project location
+    networks:
+      - project_net
+
+    environment:
+      KESTRA_PLUGINS: |
+        - groupId: io.kestra.plugin
+          artifactId: kestra-plugin-spark
+          version: 0.15.0
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://kestra-metadata:5432/kestra
+            driverClassName: org.postgresql.Driver
+            username: kestra
+            password: k3str4
+        kestra:
+          server:
+            basicAuth:
+              enabled: false
+              username: "admin@kestra.io"
+              password: kestra
+          repository:
+            type: postgres
+          storage:
+            type: local
+            local:
+              basePath: "/app/storage"
+          queue:
+            type: postgres
+          tasks:
+            tmpDir:
+              path: /tmp/kestra-wd/tmp
+          url: http://localhost:8080/
+    ports:
+      - "8080:8080"
+      - "8088:8088"
+    depends_on:
+      kestra-metadata:
+        condition: service_healthy
+
+
+  # ==> PGADMIN <<==
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: kestra-pgadmin-1    
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    networks:
+      - project_net
+    ports:
+      - "8085:80"
+
+
+  # CLICKHOUSE
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: "project_clickhouse"
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      - CLICKHOUSE_DB=default
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+    networks:
+      - project_net
+
+
+  # OLAP CONSUMERS 
+  olap-consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.olap-consumer
+    container_name: "project_olap_consumer"
+    networks:
+      - project_net
+    working_dir: /app
+    environment:
+      OLAP_DB: clickhouse  # or duckdb
+      CLICKHOUSE_HOST: clickhouse
+    volumes:
+      - ./olap:/app/olap
+      - ./olap/duckdb:/app/olap/duckdb
+    depends_on:
+      - redpanda-1
+      - clickhouse
+    command: ["tail", "-f", "/dev/null"]
+    restart: unless-stopped

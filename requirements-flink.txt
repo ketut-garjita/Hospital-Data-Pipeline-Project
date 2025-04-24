@@ -1,0 +1,10 @@
+pyflink
+psycopg2-binary==2.9.9
+requests
+kafka-python==2.0.2
+confluent_kafka==2.3.0
+google-cloud-storage==2.14.0
+google-cloud-bigquery==3.17.2
+google-cloud-bigquery-storage==2.24.0
+db-dtypes==1.1.1
+

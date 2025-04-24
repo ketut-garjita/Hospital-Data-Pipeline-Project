@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: doctors
+    description: "Cleaned and enhanced doctors dimension table"
+    columns:
+      - name: doctor_id
+        description: "Primary key for doctors"
+        tests:
+          - not_null
+          - unique
+      - name: doctor_name
+        description: "Full name of the doctor"
+        tests:
+          - not_null
+      - name: specialization
+        description: "Medical specialization of the doctor"
+      - name: experience_years
+        description: "Years of professional experience"
+        tests:
+          - not_null
+
+  - name: patients
+    description: "Cleaned and enhanced patients dimension table"
+    columns:
+      - name: patient_id
+        description: "Primary key for patients"
+        tests:
+          - not_null
+          - unique
+      - name: full_name
+        description: "Full name of the patient"
+        tests:
+          - not_null
+      - name: age
+        description: "Patient's current age"
+        tests:
+          - not_null
+
+  - name: visits_enhanced
+    description: "Enhanced visits fact table with joined dimension data"
+    columns:
+      - name: visit_id
+        description: "Primary key for visits"
+        tests:
+          - not_null
+          - unique
+      - name: total_cost
+        description: "Total cost of the visit"
+        tests:
+          - not_null
+
+  - name: patient_journey
+    description: "Comprehensive view of patient journey through the hospital system"
