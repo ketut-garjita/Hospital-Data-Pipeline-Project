@@ -123,9 +123,10 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 - Json credentials file (rename to gcs.json) and save on your $HOME directory
 - Kestra installed
 - Install Docker CLI (docker.io) from Ubuntu repositories on Kestra Container
+  
     ```
     apt-get update && apt-get install -y docker.io
-    ``
+    ```
 - pgaAmin, Dbeaver
    
 ---
