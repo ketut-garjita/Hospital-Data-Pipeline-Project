@@ -87,6 +87,8 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 | Orchestration     | Kestra            | Pipeline scheduling           |
 | Visualization     | Looker            | Dashboards and analytics      |
 | Batch Processing  | PySpark (optional)| Large-scale data processing   |
+| OLAP Databases    | ClickHouse, DuckDB| On-premise data warehouse     |
+| Visualization     | Grafana           | On-premise data visualization |
 
 
 ---
@@ -100,6 +102,9 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 | project_flink_jobmanager  | 8081           | 8081            |
 | project_postgres          | 5433           | 5432            |
 | project_dbt_runner        | 8087           | 8080            |
+| project_clickhouse        | 8123           | 8123            |
+| project_olap_consumer     |                |                 |
+| project_grafana           | 3000           | 3000            |
 | kestra-kestra-1           | 8080, 8084     | 8080, 8081      |
 | kestra-metadata-1         | 5432           | 5432            |
 | kestra-pgadmin-1          | 8085           | 80              |
@@ -110,19 +115,20 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 
 **Prerequisites**
 - Docker and Docker Compose installed
+- Terraform installed
 - Google Cloud account with GCS and BigQuery access with minimal the following roles:
     - BigQuery Admin
     - BigQuery Data Viewer
     - Storage Admin
 - Json credentials file (rename to gcs.json) and save on your $HOME directory
-- Terraform installed (for GCP setup)
 - Kestra installed
 - Install Docker CLI (docker.io) from Ubuntu repositories on Kestra Container
     ```
     apt-get update && apt-get install -y docker.io
-    ```
-- pgadmin
-
+    ``
+- pgaAmin, Dbeaver
+   
+---
 **Setup Instructions**
 
 **1. Clone the repository**
@@ -149,7 +155,6 @@ $ docker ps -a |grep kestra
 a92090a93684   kestra/kestra:latest   "docker-entrypoint.s…"   3 days ago       Exited (137) 3 days ago    kestra-kestra-1
 aa12c352d71e   postgres               "docker-entrypoint.s…"   3 days ago       Exited (0) 3 days ago      kestra-metadata-1     
 57a9f773dd7a   dpage/pgadmin4         "/entrypoint.sh"         7 days ago       Exited (0) 3 days ago      kestra-pgadmin-1
-4d875986fef1   postgres               "docker-entrypoint.s…"   7 days ago       Exited (0) 7 days ago      kestra-postgres_zoomcamp-1
 ```
 
 **kestra-metadata-1** --> Kestra metadata container
@@ -270,13 +275,16 @@ These changes are then published to the Kafka topic (or other message broker lik
 
 ```
 # Setup connector for postgres schema tables:
-docker exec -it project_debezium bash -c "/opt/src/curl_postgres_connector.sh"
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d @postgres-source.json
+curl -X POST http://localhost:8183/connectors -H "Content-Type: application/json" -d @postgres-debezium-gcs.json
 
 # Check connection:
 curl -X GET http://localhost:8083/connectors
+curl -X GET http://localhost:8183/connectors
 
 # Check connection status:
 curl -X GET http://localhost:8083/connectors/postgres-source/status
+curl -X GET http://localhost:8083/connectors/postgres-debezium-gcs/status
 ```
 
 **9. Generate sample data for dimension and fact tables**
@@ -316,15 +324,13 @@ exit
 
 **11. Import flow files from repository to Kestra**
 ```
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/01_dim_doctors.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/02_dim_patients.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/03_dim_medicines.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/04_dim_gcs_to_bigquery.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/05_streaming_producer.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/06_flink_topic_to_postgres.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/07_redpanda_debezium_to_gcs.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/08_fact_gcs_to_bigquery.yaml
-curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/09_dbt_run.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/01_streaming_producer.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/02_topic_flink_postgres.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/03_dim_gcs_to_bigquery.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/04_fact_gcs_to_bigquery.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/05_dbt_run.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/06_kafka_consumer_clickhouse.yaml
+curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/07_kafka_consumer_duckdb.yaml
 ```
 
 **12. Review flows list**
@@ -342,49 +348,19 @@ Flows --> Namespace --> filter --> project
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows sequentially:
 
-**Dimension Tables**
+```
+01_streaming_producer.yaml
+02_topic_flink_postgres.yaml
+03_dim_gcs_to_bigquery.yaml
+04_fact_gcs_to_bigquery.yaml
+05_dbt_run.yaml
+06_kafka_consumer_clickhouse.yaml
+07_kafka_consumer_duckdb.yaml
+```
 
-- **01_dim_doctors**
-  - This is for sending doctors json topic file to GCS
-
-- **02_dim_patients**
-  - This is for sending patients json topic file to GCS
-  
-- **03_dim_medicines**
-  - This is for sending medicines json topic file to GCS
-
-- **04_dim_gcs_to_bigquery**
-  - This is for uploading dimension tables from GCS to BigQuery
-  
-
-**Fact Tables**
-
-- **05_streaming_producer**
-  This is for start streaming data to Redpanda topic
-
-- **06_flink_topic_to_postgres**
-  - This is for uploading topic data to PostgreSQL. Debezium will automatically sending data changes to Redpanda topic,
-
-- **07_redpanda_debezium_to_gcs**
-  - This is for sending json topic files to GCS
-
-- **08_fact_gcs_to_bigquery**
-  - This is for uploading fact tables from GCS to BigQuery
-
-
-**dbt**
-
-- **09_dbt_run**
-  - This is for debugging, running, generating, and serving documents for dbt (data build tool) to create a data mart for analytics.
-
+---
 **14. Monitoring**
 
-- Monitor topic using rpk commamd
-  - rpk --help
-  - rpk topic list
-  - rpk topic consume
-  - etc.
-  
 - Monitor executions of flows pipeline on Kestra UI
 
   [http://localhost:8080](http://localhost:8080)
@@ -397,9 +373,15 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 
   ![image](https://github.com/user-attachments/assets/45c8f478-dee8-4e79-9a75-2fd3ae8238f9)
 
+- Monitor topics status
+  
+  [http://localhost:8180/ui/redpanda/topic](http://localhost:8180/ui/redpanda/topic)
+
+  ![image](https://github.com/user-attachments/assets/f4808633-d153-4666-aa96-8e4081054d5d)
+
 - Google Cloud Storage (Bucket)
 
-  ![image](https://github.com/user-attachments/assets/feb4fdbe-95c2-4a38-883a-4b525a241441)
+  ![image](https://github.com/user-attachments/assets/39144663-0a38-4df7-b236-7e27df4015f9)
 
 - BiqQuery Datasets
    
