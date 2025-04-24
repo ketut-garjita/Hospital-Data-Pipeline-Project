@@ -365,7 +365,9 @@ Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute t
 
   [http://localhost:8080](http://localhost:8080)
 
-  ![image](https://github.com/user-attachments/assets/8d5f0eba-972d-4a81-8aed-85365de79dd2)
+  [images/project-kestra-executions.png](https://github.com/ketut-garjita/streaming-project-1/blob/main/images/project-kestra-executions.png)
+
+  ![image](https://github.com/user-attachments/assets/857b0acf-5572-4cf7-941d-937cee06a98f)
 
 - Monitor data transfer from topic to postgres using Apache Flink Dashboad
 
