@@ -248,24 +248,7 @@ hospital_analytics:
 Entry your project-id and region name.
 
 
-**6. Create Database Tables**
-
-- **PostgreSQL**
-  ```
-  docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
-  ```
-
-- **ClickHouse**
-  ```
-  docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_tables.sql"
-  ```
-  
-- **DuckDB**
-  ```
-  docker exec -i project_olap_consumer /root/.duckdb/cli/*/duckdb /app/olap/duckdb/hospital.db < ./olap/duckdb/create_tables.sql
-  ```
-  
-**7. Setup Debezium Connector**
+**6. Setup Debezium Connector**
 
 A Debezium connector is a tool that captures changes in a database and streams them in real time. It's part of the Debezium platform, which is an open-source distributed platform for Change Data Capture (CDC).
 
@@ -289,7 +272,27 @@ curl -X GET http://localhost:8083/connectors/postgres-source/status
 curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
 ```
 
-**8. Generate sample data for dimension and fact tables**
+
+**7. Create Database Tables**
+
+- **PostgreSQL**
+  ```
+  docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
+  ```
+
+- **ClickHouse**
+  ```
+  docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_tables.sql"
+  ```
+  
+- **DuckDB**
+  ```
+  docker exec -it project_olap_consumer /root/.duckdb/cli/*/duckdb /app/olap/duckdb/hospital.db < ./olap/duckdb/create_tables.sql
+  ```
+  
+
+
+**8. Generate sample data for dimension and fact tables on PostgreSQL**
 
 On local server:
 
@@ -368,40 +371,46 @@ Note: 05_dbt_run.yaml can be run last
 ---
 **13. Monitoring**
 
-- Monitor executions of flows pipeline on Kestra UI
+- **Monitor executions of flows pipeline on Kestra UI**
 
   [http://localhost:8080](http://localhost:8080)
 
   ![image](https://github.com/user-attachments/assets/857b0acf-5572-4cf7-941d-937cee06a98f)
 
-- Monitor data transfer from topic to postgres using Apache Flink Dashboad
+- **Monitor data transfer from topic to postgres using Apache Flink Dashboard**
 
   [http://localhost:8081](http://localhost:8081)
 
   ![image](https://github.com/user-attachments/assets/45c8f478-dee8-4e79-9a75-2fd3ae8238f9)
 
-- Monitor topics status
+- **Monitor topics status via AKHQ tool**
+  
+  [AKHQ](https://akhq.io/) is Kafka GUI for Apache Kafka ® to manage topics, topics data, consumers group, schema registry, connect and more.
   
   [http://localhost:8180/ui/redpanda/topic](http://localhost:8180/ui/redpanda/topic)
 
   ![image](https://github.com/user-attachments/assets/f4808633-d153-4666-aa96-8e4081054d5d)
 
-- Google Cloud Storage (Bucket)
+- **Google Cloud Storage (GCS)**
 
   ![image](https://github.com/user-attachments/assets/39144663-0a38-4df7-b236-7e27df4015f9)
 
-- BiqQuery Datasets
+- **BiqQuery Datasets**
    
   ![image](https://github.com/user-attachments/assets/14493dfe-c841-4f49-8914-88091aa9433f)
 
   ![image](https://github.com/user-attachments/assets/15553ba4-ff8f-41d9-8a95-ccd5e905594d)
 
-- **dbt**
-  url: [http://localhost:8087](http://localhost:8087)
+- **Data build tools (dbt)**
+  - Serve dbt document:
+    ```
+    docker exec -it project_dbt_runner dbt docs serve --port 8080 --host 0.0.0.0
+    ```
+  - Open: url: [http://localhost:8087](http://localhost:8087)
 
-  ![image](https://github.com/user-attachments/assets/6eeb8f45-b458-4620-9686-b6c9fe50cf85)
-
-  ![image](https://github.com/user-attachments/assets/7a8d326a-b69d-4cc0-99d4-83681832482c)
+    ![image](https://github.com/user-attachments/assets/6eeb8f45-b458-4620-9686-b6c9fe50cf85)
+  
+    ![image](https://github.com/user-attachments/assets/7a8d326a-b69d-4cc0-99d4-83681832482c)
 
 
 ---
@@ -411,18 +420,18 @@ The Looker dashboard provides several key views:
 
 [https://lookerstudio.google.com/reporting/22cfa44a-2e7a-4342-83c5-1bad02cd9c45](https://lookerstudio.google.com/reporting/22cfa44a-2e7a-4342-83c5-1bad02cd9c45)
 
-distribution-of-diagnosis-type (1)
+**distribution-of-diagnosis-type (1)**
 
 ![image](https://github.com/user-attachments/assets/b53dd91c-98c2-4219-b3c7-a34dde7a27ca)
 
-distribution-of-diagnosis-type (2)
+**distribution-of-diagnosis-type (2)**
 
 ![image](https://github.com/user-attachments/assets/ef657d48-f293-4da1-b8bd-3fed4258e320)
 
 
 [https://lookerstudio.google.com/reporting/cfecb452-76e5-4f87-adf2-17f043b4434b](https://lookerstudio.google.com/reporting/cfecb452-76e5-4f87-adf2-17f043b4434b)
 
-total-revenue-by-month
+**total-revenue-by-month**
 
 ![image](https://github.com/user-attachments/assets/b57a3576-c9b2-423f-a5e3-1a14b4a7f83e)
 
@@ -430,7 +439,7 @@ total-revenue-by-month
 [https://lookerstudio.google.com/reporting/fe0b9c34-2c48-42ba-b34b-902cec94b8ed](https://lookerstudio.google.com/reporting/fe0b9c34-2c48-42ba-b34b-902cec94b8ed)
 
 
-total-revenue-by-doctor
+**total-revenue-by-doctor**
 
 ![image](https://github.com/user-attachments/assets/e4dd3f12-54b2-4703-a149-bfd5bfd5ec9f)
 
@@ -442,22 +451,24 @@ Notes:
 - In a production environment, this batch processing option should not be run during peak hours of OLTP database operations because it will affect the operational performance of the OLTP database. The reason is that this batch processing will directly access the operational database.
 - Ideally, the database for analytical purposes (OLAP) should be separated from the operational or transaction database (OLTP).
   
-Pre-requisites:
-- Apache Spark installed on local server
-- Anaconda or Jupyter Notebook installed 
-- Downnload jars
-  ```
-  sudo mkdir /usr/lib/jars
-  cd /usr/lib//jars
-  sudo wget  https://jdbc.postgresql.org/download/postgresql-42.7.1.jar
-  sudo wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop3-latest.jar
-  ```
+- Pre-requisites:
+  - Apache Spark installed on local server
+  - Anaconda or Jupyter Notebook installed 
+  - Downnload jars
+    ```
+    sudo mkdir /usr/lib/jars
+    cd /usr/lib//jars
+    sudo wget  https://jdbc.postgresql.org/download/postgresql-42.7.1.jar
+    sudo wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop3-latest.jar
+    ```
 - Extract data from Postgres and upload to GCS in json format file
 
   Execute [pyspark_extract_upload_gcs.py](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/src/pipeline/pyspark_extract_upload_gcs.py)
+
   ```
   python ./src/pipeline/pyspark_extract_upload_gcs.py
   ```
+  
 - PySpark GCS files
 
   ![image](https://github.com/user-attachments/assets/3b0496aa-a4dc-463f-8c31-d613f85c207d)
