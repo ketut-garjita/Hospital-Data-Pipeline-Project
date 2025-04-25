@@ -456,7 +456,7 @@ Note: 05_dbt_run.yaml can be run last
   
   <img width="323" alt="image" src="https://github.com/user-attachments/assets/570988a0-1213-45b8-ae9f-08257c954fcf" />
 
-- Connection --> Add new conenction --> Data source --> ClickHouse --> Install
+- Connection --> Add new connection --> Data source --> ClickHouse --> Install
 
 - Add new data source:
   - Server addres: project_clickhouse
