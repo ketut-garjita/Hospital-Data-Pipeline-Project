@@ -247,24 +247,25 @@ hospital_analytics:
 ```
 Entry your project-id and region name.
 
-**6. Change wal_level parameter from replica to logical in postgresql.conf file**
 
-This modification enables logical decoding for transaction logs.
+**6. Create Database Tables**
 
-Copy ./src/postgresql.conf to project_postgres:/var/lib/postgresql/data/
+- **PostgreSQL**
+  ```
+  docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
+  ```
 
-```
-docker cp ./src/postgresql.conf project_postgres:/var/lib/postgresql/data/postgresql.conf 
-docker restart project_postgres
-```
-
-**7. Create Postgres tables**
-
-```
-docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
-```
-
-**8. Setup Debezium Connector**
+- **ClickHouse**
+  ```
+  docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_tables.sql"
+  ```
+  
+- **DuckDB**
+  ```
+  docker exec -i project_olap_consumer /root/.duckdb/cli/*/duckdb /app/olap/duckdb/hospital.db < ./olap/duckdb/create_tables.sql
+  ```
+  
+**7. Setup Debezium Connector**
 
 A Debezium connector is a tool that captures changes in a database and streams them in real time. It's part of the Debezium platform, which is an open-source distributed platform for Change Data Capture (CDC).
 
@@ -276,8 +277,8 @@ These changes are then published to the Kafka topic (or other message broker lik
 
 ```
 # Setup connector for postgres schema tables:
-curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d @postgres-source.json
-curl -X POST http://localhost:8183/connectors -H "Content-Type: application/json" -d @postgres-debezium-gcs.json
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d @./connectors/postgres-source.json
+curl -X POST http://localhost:8183/connectors -H "Content-Type: application/json" -d @./connectors/postgres-debezium-gcs.json
 
 # Check connection:
 curl -X GET http://localhost:8083/connectors
@@ -288,7 +289,7 @@ curl -X GET http://localhost:8083/connectors/postgres-source/status
 curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
 ```
 
-**9. Generate sample data for dimension and fact tables**
+**8. Generate sample data for dimension and fact tables**
 
 On local server:
 
@@ -299,7 +300,7 @@ pip install faker
 python ./src/generate_data_postgres.py
 ```
 
-**10. Check Redpanda Topics**
+**9. Check Redpanda Topics**
 ```
 docker exec -it project_redpanda bash
 ```
@@ -326,7 +327,7 @@ Ctrl+C
 
 exit
 
-**11. Import flow files from repository to Kestra**
+**10. Import flow files from repository to Kestra**
 ```
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/01_streaming_producer.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/02_topic_flink_postgres.yaml
@@ -337,7 +338,7 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flow
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/07_kafka_consumer_duckdb.yaml
 ```
 
-**12. Review flows list**
+**11. Review flows list**
 
 Login to Kestra UI at [http://localhost:8080](http://localhost:8080) 
 
@@ -348,7 +349,7 @@ Flows --> Namespace --> filter --> project
 ![image](https://github.com/user-attachments/assets/9a7940b2-d0b6-4fe5-b43a-6267d0a4eb59)
 
 
-**13. Start streaming pipeline via Kestra GUI**
+**12. Start streaming pipeline via Kestra GUI**
 
 Access Kestra UI at [http://localhost:8080](http://localhost:8080) and execute the following workflows:
 
@@ -365,7 +366,7 @@ Note: 05_dbt_run.yaml can be run last
 ```
 
 ---
-**14. Monitoring**
+**13. Monitoring**
 
 - Monitor executions of flows pipeline on Kestra UI
 
