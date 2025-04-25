@@ -417,7 +417,8 @@ Note: 05_dbt_run.yaml can be run last
 ---
 ## Dashboard
 
-The Looker dashboard provides several key views:
+- **GCP Looker**
+  The Looker dashboard provides several key views:
 
 [https://lookerstudio.google.com/reporting/22cfa44a-2e7a-4342-83c5-1bad02cd9c45](https://lookerstudio.google.com/reporting/22cfa44a-2e7a-4342-83c5-1bad02cd9c45)
 
@@ -443,6 +444,29 @@ The Looker dashboard provides several key views:
 **total-revenue-by-doctor**
 
 ![image](https://github.com/user-attachments/assets/e4dd3f12-54b2-4703-a149-bfd5bfd5ec9f)
+
+- **Grafana**
+- Open URL: [http://localhost:3000](http://localhost:3000)
+  
+  <img width="323" alt="image" src="https://github.com/user-attachments/assets/570988a0-1213-45b8-ae9f-08257c954fcf" />
+
+- Connection --> Add new conenction --> Data source --> ClickHouse --> Install
+
+- Add new data source:
+  - Server addres: project_clickhouse
+  - Server port: 8123
+  - Protocol: HTTP
+  - Username: streaming
+  - Password: password
+    Save & test
+    
+-  building a dashboard --> + Add Visualization --> Select data source (grafana-clickhouse-datasource (default)) 
+   --> SQL Editor
+- Sample visualization
+- 
+  - <img width="452" alt="image" src="https://github.com/user-attachments/assets/9a505a15-a063-4b6e-b170-9f666cc7bc61" />
+
+  - <img width="326" alt="image" src="https://github.com/user-attachments/assets/8a5a9d5d-2bb3-4d21-a82f-986c934f293f" />
 
 
 ---
