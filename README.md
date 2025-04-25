@@ -450,7 +450,8 @@ Note: 05_dbt_run.yaml can be run last
   ```
   docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_MV.sql"
   ```
-  
+  <img width="353" alt="image" src="https://github.com/user-attachments/assets/2c3f4058-783e-4060-af17-cfcbba636249" />
+
 - Open URL: [http://localhost:3000](http://localhost:3000)
   
   <img width="323" alt="image" src="https://github.com/user-attachments/assets/570988a0-1213-45b8-ae9f-08257c954fcf" />
