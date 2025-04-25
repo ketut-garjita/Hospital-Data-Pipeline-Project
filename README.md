@@ -135,8 +135,8 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 **1. Clone the repository**
 
 ```
-git clone https://github.com/ketut-garjita/streamin-project-1.git
-cd streamin-project-1
+git clone https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project.git
+cd Hospital-Data-Pipeline-Project
 ```
 
 **2. Build and start containers**
