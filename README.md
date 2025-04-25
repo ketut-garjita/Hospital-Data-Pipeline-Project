@@ -437,6 +437,10 @@ total-revenue-by-doctor
 ---
 ## PySpark Batch Processing (optional)
 
+Notes:
+- In a production environment, this batch processing option should not be run during peak hours of OLTP database operations because it will affect the operational performance of the OLTP database. The reason is that this batch processing will directly access the operational database.
+- Ideally, the database for analytical purposes (OLAP) should be separated from the operational or transaction database (OLTP).
+  
 Pre-requisites:
 - Apache Spark installed on local server
 - Anaconda or Jupyter Notebook installed 
