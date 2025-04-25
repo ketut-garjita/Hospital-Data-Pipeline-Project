@@ -448,6 +448,8 @@ Note: 05_dbt_run.yaml can be run last
 - **Grafana**
 - Create Materialized Views
   ```
+  docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_MV.sql"
+  ```
   
 - Open URL: [http://localhost:3000](http://localhost:3000)
   
@@ -463,8 +465,29 @@ Note: 05_dbt_run.yaml can be run last
   - Password: password
     Save & test
     
--  building a dashboard --> + Add Visualization --> Select data source (grafana-clickhouse-datasource (default)) 
-   --> SQL Editor
+-  building a dashboard --> + Add Visualization --> Select data source (grafana-clickhouse-datasource (default)) --> SQL Editor:
+   
+   ```
+   -- Top Diagnoses
+    SELECT
+        diagnosis,
+        sum(diagnosis_count) AS total
+    FROM hospital.mv_top_diagnosis
+    GROUP BY diagnosis
+    ORDER BY total DESC
+    LIMIT 10
+   ```
+   ```
+   -- Most Prescribed Medicines
+    SELECT
+        m.name AS medicine,
+        p.total_prescribed
+    FROM hospital.mv_prescription_stats p
+    JOIN hospital.medicines m ON p.medicine_id = m.medicine_id
+    ORDER BY total_prescribed DESC
+    LIMIT 10
+   ```
+   
 - Sample visualization
 
   <img width="452" alt="image" src="https://github.com/user-attachments/assets/9a505a15-a063-4b6e-b170-9f666cc7bc61" />
