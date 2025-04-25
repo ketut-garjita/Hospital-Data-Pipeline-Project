@@ -431,7 +431,7 @@ Note: 05_dbt_run.yaml can be run last
 ---
 ## Dashboard
 
-###1. Cloud: GCP Looker
+### 1. Cloud: GCP Looker
 
   The Looker dashboard provides several key views:
 
@@ -460,7 +460,7 @@ Note: 05_dbt_run.yaml can be run last
 
 ![image](https://github.com/user-attachments/assets/e4dd3f12-54b2-4703-a149-bfd5bfd5ec9f)
 
-###2. On-Premise: Grafana
+### 2. On-Premise: Grafana
 
 - Create Materialized Views
   ```
