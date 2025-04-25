@@ -472,8 +472,10 @@ Note: 05_dbt_run.yaml can be run last
   
   <img width="323" alt="image" src="https://github.com/user-attachments/assets/570988a0-1213-45b8-ae9f-08257c954fcf" />
 
-- Username: admin
-- Password: admin
+  ```
+  Username: admin
+  Password: admin
+  ```
 
 - Connection --> Add new connection --> Data source --> ClickHouse --> Install
 
