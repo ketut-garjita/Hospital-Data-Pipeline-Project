@@ -276,16 +276,19 @@ curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
 **7. Create Database Tables**
 
 - **PostgreSQL (OLTP)**
+
   ```
   docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
   ```
 
 - **ClickHouse (OLAP) - for robust, ditributed analytics at scale**
+
   ```
   docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_tables.sql"
   ```
   
 - **DuckDB (OLAP) - for efficient, local data processing without overhead**
+
   ```
   docker exec -it project_olap_consumer /root/.duckdb/cli/*/duckdb /app/olap/duckdb/hospital.db < ./olap/duckdb/create_tables.sql
   ```
@@ -293,18 +296,26 @@ curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
 You can use tools like pgAdmin for PostgreSQL and DBeaver for working with various database platforms.
 
 
-**8. Generate sample data for dimension and fact tables on PostgreSQL**
+**8. Generate sample syntetic data for dimension and fact tables on PostgreSQL**
 
 On local server:
 
-```
-pip install faker
-```
-```
-python ./src/generate_data_postgres.py
-```
+- pre-requisite
+
+  ```
+  pip install faker
+  ```
+
+- load data
+
+  ```
+  python ./src/generate_data_postgres.py
+  ```
 
 **9. Check Redpanda Topics**
+
+- Using CLI
+
 ```
 docker exec -it project_redpanda bash
 ```
@@ -330,6 +341,9 @@ rpk topic consume postgres-source.public.visits
 Ctrl+C
 
 exit
+
+- Using AKHQ GUI tool
+
 
 **10. Import flow files from repository to Kestra**
 ```
@@ -418,6 +432,7 @@ Note: 05_dbt_run.yaml can be run last
 ## Dashboard
 
 - **GCP Looker**
+
   The Looker dashboard provides several key views:
 
 [https://lookerstudio.google.com/reporting/22cfa44a-2e7a-4342-83c5-1bad02cd9c45](https://lookerstudio.google.com/reporting/22cfa44a-2e7a-4342-83c5-1bad02cd9c45)
