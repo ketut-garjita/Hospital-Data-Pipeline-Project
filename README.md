@@ -275,17 +275,17 @@ curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
 
 **7. Create Database Tables**
 
-- **PostgreSQL**
+- **PostgreSQL (OLTP)**
   ```
   docker exec -it project_postgres psql -U postgres -d hospital -f /opt/src/create_tables.sql
   ```
 
-- **ClickHouse**
+- **ClickHouse (OLAP) - for robust, ditributed analytics at scale**
   ```
   docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_tables.sql"
   ```
   
-- **DuckDB**
+- **DuckDB (OLAP) - for efficient, local data processing without overhead**
   ```
   docker exec -it project_olap_consumer /root/.duckdb/cli/*/duckdb /app/olap/duckdb/hospital.db < ./olap/duckdb/create_tables.sql
   ```
