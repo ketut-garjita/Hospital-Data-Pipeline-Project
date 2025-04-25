@@ -463,10 +463,10 @@ Note: 05_dbt_run.yaml can be run last
 -  building a dashboard --> + Add Visualization --> Select data source (grafana-clickhouse-datasource (default)) 
    --> SQL Editor
 - Sample visualization
-- 
-  - <img width="452" alt="image" src="https://github.com/user-attachments/assets/9a505a15-a063-4b6e-b170-9f666cc7bc61" />
 
-  - <img width="326" alt="image" src="https://github.com/user-attachments/assets/8a5a9d5d-2bb3-4d21-a82f-986c934f293f" />
+  <img width="452" alt="image" src="https://github.com/user-attachments/assets/9a505a15-a063-4b6e-b170-9f666cc7bc61" />
+
+  <img width="452" alt="image" src="https://github.com/user-attachments/assets/8948fd35-c2db-4ac2-bfbd-9ef75272ed17" />
 
 
 ---
