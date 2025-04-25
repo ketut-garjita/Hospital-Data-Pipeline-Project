@@ -446,6 +446,9 @@ Note: 05_dbt_run.yaml can be run last
 ![image](https://github.com/user-attachments/assets/e4dd3f12-54b2-4703-a149-bfd5bfd5ec9f)
 
 - **Grafana**
+- Create Materialized Views
+  ```
+  
 - Open URL: [http://localhost:3000](http://localhost:3000)
   
   <img width="323" alt="image" src="https://github.com/user-attachments/assets/570988a0-1213-45b8-ae9f-08257c954fcf" />
