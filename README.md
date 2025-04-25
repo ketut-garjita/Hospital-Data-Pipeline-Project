@@ -431,7 +431,7 @@ Note: 05_dbt_run.yaml can be run last
 ---
 ## Dashboard
 
-- **GCP Looker**
+###1. Cloud: GCP Looker
 
   The Looker dashboard provides several key views:
 
@@ -460,7 +460,8 @@ Note: 05_dbt_run.yaml can be run last
 
 ![image](https://github.com/user-attachments/assets/e4dd3f12-54b2-4703-a149-bfd5bfd5ec9f)
 
-- **Grafana**
+###2. On-Premise: Grafana
+
 - Create Materialized Views
   ```
   docker exec -it project_clickhouse bash -c "clickhouse-client -u streaming --password password -d hospital < /opt/clickhouse/create_MV.sql"
