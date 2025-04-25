@@ -8,5 +8,6 @@ project_flink_taskmanager \
 project_flink_jobmanager \
 project_dbt_runner \
 project_clickhouse \
-project_olap_consumer
+project_olap_consumer \
+project_grafana
 ~                       
