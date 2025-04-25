@@ -1,4 +1,4 @@
-# Hospital Data Pipeline Project
+# Streaming Data Pipeline - Hospital Medical Services System (sample case)
 
 ## Objective
 This project aims to build an end-to-end data pipeline for hospital service analytics by implementing modern data engineering tools. The pipeline will process both streaming and batch data, enabling actionable insights into:
