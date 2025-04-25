@@ -290,6 +290,7 @@ curl -X GET http://localhost:8183/connectors/postgres-debezium-gcs/status
   docker exec -it project_olap_consumer /root/.duckdb/cli/*/duckdb /app/olap/duckdb/hospital.db < ./olap/duckdb/create_tables.sql
   ```
   
+You can use tools like pgAdmin for PostgreSQL and DBeaver for working with various database platforms.
 
 
 **8. Generate sample data for dimension and fact tables on PostgreSQL**
