@@ -31,7 +31,7 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 ## Data Pipeline Architecture
 **Hospital Data Pipeline**
 
-![image](https://github.com/user-attachments/assets/012a2864-d878-4b99-bdb7-5252b67aeb9b)
+![image](https://github.com/user-attachments/assets/51777e9e-025c-4550-a48f-695f06dc6285)
 
 [Hospital Data Pipeline](https://github.com/ketut-garjita/streaming-project-1/blob/main/images/project-hospital-data-pipeline.svg)
 
