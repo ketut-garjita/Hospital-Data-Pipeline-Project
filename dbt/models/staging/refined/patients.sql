@@ -31,7 +31,7 @@ SELECT
     THEN DATE_DIFF(CURRENT_DATE(), date_of_birth, YEAR)
     ELSE NULL
   END AS age,
-  -- Kategori usia
+  -- age group category
   CASE
     WHEN date_of_birth IS NULL THEN 'Invalid Birth Date'
     WHEN DATE_DIFF(CURRENT_DATE(), date_of_birth, YEAR) < 18 THEN 'Child'
