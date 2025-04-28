@@ -63,23 +63,23 @@ def insert_to_clickhouse(table, payload, schema_info=None):
                 else:
                     raise ValueError(f"Expected int for {col}, got {type(val)}: {val}")
 
-            # Tangani tipe decimal
+            # handle decimal tipe
             elif col_type and col_type.startswith('Decimal'):
                 values.append(str(val))  # Decimal tetap ditulis sebagai angka (tanpa kutip)
 
-            # Tangani tanggal berbasis epoch (khusus date_of_birth, visit_date, dll)
+            # handle epoch date
             elif col_type == 'Date32' or (schema_info is None and 'date' in col.lower()):
                 if isinstance(val, int):
                     values.append(f"toDate32({val})")
                 else:
                     values.append('NULL')
 
-            # String harus di-escape dan diberi kutip
+            # String must be escaped and give double quote
             else:
                 escaped = str(val).replace("'", "''")
                 values.append(f"'{escaped}'")
 
-        # Bangun dan eksekusi query
+        # create and execute query
         query = f"""
         INSERT INTO {table} ({', '.join(columns)})
         VALUES ({', '.join(values)})
