@@ -10,9 +10,9 @@ SELECT
   name AS medicine_name,
   category,
   manufacturer,
-  -- Perbaikan: Konversi ke numeric
+  -- convert to numeric
   SAFE_CAST(price AS NUMERIC) AS price,
-  -- Perbaikan price category dengan tipe data yang benar
+  -- Fixed price category with correct data type
   CASE
     WHEN SAFE_CAST(price AS NUMERIC) < 10 THEN 'Low-cost'
     WHEN SAFE_CAST(price AS NUMERIC) BETWEEN 10 AND 50 THEN 'Medium-cost'
