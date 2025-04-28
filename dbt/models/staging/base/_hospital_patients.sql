@@ -13,7 +13,7 @@ SELECT
   blood_type,
   contact_info,
   insurance_id,
-  -- Hitung usia
+  -- age
   DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y%m%d', CAST(date_of_birth AS STRING)), YEAR) AS age,
   
   -- Age group calculation
