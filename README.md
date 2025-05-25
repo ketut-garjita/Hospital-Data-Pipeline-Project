@@ -32,6 +32,7 @@ https://github.com/ketut-garjita/streaming-project-1/blob/main/images/Hospital_S
 
 ![Streaming Data Pipeline](https://github.com/ketut-garjita/streaming-project-1/blob/main/images/streaming_data_pipeline.svg)
 
+https://github.com/ketut-garjita/streaming-project-1/blob/main/images/streaming_data_pipeline.svg
 
 ### Input
 - Postgres table creation and data initialization (dimension and fact tables) 
