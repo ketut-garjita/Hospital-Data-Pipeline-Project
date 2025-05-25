@@ -24,7 +24,9 @@ Our solution integrates this dispersed data into a unified analytics platform wi
 
 ![image](https://github.com/user-attachments/assets/9c82b2f7-37a2-496a-b773-4e9d01d565bc)
 
-[https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/Hospital_Schema_ERD.png](https://github.com/ketut-garjita/Hospital-Data-Pipeline-Project/blob/main/images/Hospital_Schema_ERD.png)
+![My SVG](./path/to/yourfile.svg)
+
+![My SVG](https://github.com/ketut-garjita/streaming-project-1/blob/main/images/streaming_data_pipeline.svg)
 
 
 ---
