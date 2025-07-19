@@ -14,6 +14,7 @@ volumes:
   vol-kestra-data:
     name: vol-kestra-data
   clickhouse_data:
+  grafana-storage:
 
 services:
 
@@ -373,7 +374,7 @@ services:
   # GRAFANA
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: "project_grafana"
     ports:
       - "3000:3000"
     volumes:
