@@ -346,6 +346,7 @@ exit
 
 **10. Import flow files from repository to Kestra**
 ```
+Kestra OLD Version:
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/01_streaming_producer.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/02_topic_flink_postgres.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/03_dim_gcs_to_bigquery.yaml
@@ -353,6 +354,16 @@ curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flow
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/05_dbt_run.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/06_kafka_consumer_clickhouse.yaml
 curl -X POST http://localhost:8080/api/v1/flows/import -F fileUpload=@./src/flows/07_kafka_consumer_duckdb.yaml
+
+Kestra NEW Version:
+curl -v -u "kestra-uid:kestra-password" -X POST http://localhost:8080/api/v1/main/flows -H "Content-Type: application/x-yaml" --data-binar "@./src/flows/01_streaming_producer.yaml"
+curl -v -u "kestra-uid:kestra-password" -X POST http://localhost:8080/api/v1/main/flows -H "Content-Type: application/x-yaml" --data-binary "@./src/flows/02_topic_flink_postgres.yaml"
+curl -v -u "kestra-uid:kestra-password" -X POST http://localhost:8080/api/v1/main/flows -H "Content-Type: application/x-yaml" --data-binary "@./src/flows/03_dim_gcs_to_bigquery.yaml"
+curl -v -u "kestra-uid:kestra-password" -X POST http://localhost:8080/api/v1/main/flows -H "Content-Type: application/x-yaml" --data-binary "@./src/flows/04_fact_gcs_to_bigquery.yaml"
+curl -v -u "kestra-uid:kestra-password" -X POST http://localhost:8080/api/v1/main/flows -H "Content-Type: application/x-yaml" --data-binary "@./src/flows/05_dbt_run.yaml"
+curl -v -u "kestra-uid:kestra-password" -X POST http://localhost:8080/api/v1/main/flows -H "Content-Type: application/x-yaml" --data-binary "@./src/flows/06_kafka_consumer_clickhouse.yaml"
+curl -v -u "kestra-uid:kestra-password" -X POST http://localhost:8080/api/v1/main/flows -H "Content-Type: application/x-yaml" --data-binary "@./src/flows/07_kafka_consumer_duckdb.yaml"
+
 ```
 
 **11. Review flows list**
