@@ -25,7 +25,7 @@ RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dea
 # Install some packages
 RUN apt-get update && \
     apt-get install -y vim git && \
-    pip install --no-cache-dir -r requirements-kestra.txt
+    pip install confluent_kafka
 
 # Clean up cache for decrease images size
 RUN apt-get clean && \
